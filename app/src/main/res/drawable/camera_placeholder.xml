@@ -1,0 +1,22 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Circle Background -->
+    <item android:right="0dp" android:left="0dp" android:top="0dp" android:bottom="0dp">
+        <shape
+            android:shape="oval">
+            <solid android:color="#D3D3D3"/> <!-- Light gray color for the circle -->
+            <size android:width="180dp" android:height="180dp"/>
+        </shape>
+    </item>
+
+    <!-- Hollow Button (Camera Icon Placeholder) -->
+    <item android:left="55dp" android:right="55dp" android:top="55dp" android:bottom="55dp">
+        <shape
+            android:shape="oval">
+            <solid android:color="#FFFFFF"/>
+            <size android:width="70dp" android:height="70dp"/>
+            <stroke
+                android:color="#000000"
+                android:width="2dp"/>
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Camera Preview (Full-screen portrait layout) -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/cameraPreviewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Circle button for capturing photos and videos -->
+    <ImageView
+        android:id="@+id/captureButton"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/camera_placeholder"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="160dp" />
+
+    <!-- Text for switching between photo/video mode -->
+    <TextView
+        android:id="@+id/modeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Photo Mode"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/captureButton"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Flash Indicator -->
+    <ImageView
+        android:id="@+id/flashIndicator"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_flash_on" />
+
+    <!-- Profile Button to go back to MainActivity -->
+    <ImageButton
+        android:id="@+id/profileButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/person_placeholder"
+        android:contentDescription="Profile"
+        android:background="?android:attr/selectableItemBackgroundBorderless" />
+
+    <!-- Image Preview (Shows captured image/video) -->
+    <ImageView
+        android:id="@+id/previewImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
+    <!-- Upload Button (To upload the captured media to the story) -->
+    <Button
+        android:id="@+id/uploadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/previewImageView"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
+    <!-- Send Button (To send the captured media to a friend) -->
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send To"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/uploadButton"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
+</RelativeLayout>

@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Search Bar to search friends by username -->
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by username"
+        android:padding="10dp"
+        android:layout_alignParentTop="true"/>
+
+    <!-- RecyclerView for displaying search results (users to add) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friendsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchEditText"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentStart="true"/>
+
+    <!-- Divider between the two RecyclerViews -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/friendsRecyclerView"
+        android:layout_marginTop="20dp"
+        android:background="#CCCCCC"/>
+
+    <!-- RecyclerView for displaying friends you've already added -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/addedFriendsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/friendsRecyclerView"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentStart="true"/>
+</RelativeLayout>
