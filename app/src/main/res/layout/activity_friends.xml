@@ -1,39 +1,81 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- Search Bar to search friends by username -->
-    <EditText
-        android:id="@+id/searchEditText"
+    <!-- Title -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="200dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="35dp"
+        android:text="Add a Friend"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@color/secondary_pink"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:lineSpacingExtra="8sp"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Search Bar -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search by username"
+        android:orientation="horizontal"
+        android:background="@drawable/search_bar_background"
         android:padding="10dp"
-        android:layout_alignParentTop="true"/>
+        android:layout_margin="5dp"
+        android:elevation="9dp"
+        android:outlineSpotShadowColor="@color/secondary_pink"
+        android:outlineAmbientShadowColor="@color/secondary_pink">
 
-    <!-- RecyclerView for displaying search results (users to add) -->
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/search"
+            android:contentDescription="Search Icon"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="6dp" />
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search Username"
+            android:background="@android:color/transparent"
+            android:padding="0dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/inter_regular" />
+    </LinearLayout>
+
+    <!-- Friends List Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friendsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/searchEditText"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentStart="true"/>
+        android:padding="10dp" />
 
-    <!-- Divider between the two RecyclerViews -->
+    <!-- Divider Line -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/friendsRecyclerView"
-        android:layout_marginTop="20dp"
-        android:background="#CCCCCC"/>
+        android:background="#CCCCCC"
+        android:layout_marginBottom="20dp" />
 
-    <!-- RecyclerView for displaying friends you've already added -->
+    <!-- Added Friends List Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/addedFriendsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/friendsRecyclerView"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentStart="true"/>
-</RelativeLayout>
+        android:padding="10dp" />
+
+    <include
+        android:id="@+id/bottom_nav_menu"
+        layout="@drawable/bottom_nav_menu" />
+</LinearLayout>

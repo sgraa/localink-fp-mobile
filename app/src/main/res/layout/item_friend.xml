@@ -1,32 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_marginTop="0dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:outlineSpotShadowColor="@color/secondary_pink"
+    android:outlineAmbientShadowColor="@color/secondary_pink"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardUseCompatPadding="true">
 
-    <!-- Profile Picture -->
-    <ImageView
-        android:id="@+id/friend_profile_pic"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/person_placeholder" />
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:padding="16dp">
 
-    <!-- Username -->
-    <TextView
-        android:id="@+id/friend_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Username"
-        android:textSize="16sp"
-        android:layout_gravity="center_vertical" />
+<!-- Profile Picture (Circular) -->
+<ImageView
+    android:id="@+id/friend_profile_pic"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_gravity="center_vertical"
+    android:layout_marginEnd="16dp"
+    android:contentDescription="Profile Picture"
+    android:scaleType="centerCrop"
+    android:src="@drawable/bijou_image" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewFriends"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+<!-- Username -->
+<TextView
+    android:id="@+id/friend_username"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginStart="16dp"
+    android:fontFamily="@font/inter_regular"
+    android:text="Friend Name"
+    android:textColor="@android:color/black"
+    android:textSize="16sp" />
 </LinearLayout>
+    </androidx.cardview.widget.CardView>

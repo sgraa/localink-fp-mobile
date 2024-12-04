@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/bottom_nav_background"
+    android:padding="10dp"
+    android:layout_marginTop="20dp">
+
+    <Button
+        android:id="@+id/home_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/search"
+        android:contentDescription="Home"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/transparent"
+        android:focusable="false"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/messages_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/search"
+        android:contentDescription="Messages"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/transparent"
+        android:focusable="false"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/search"
+        android:contentDescription="Add Friend"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/transparent"
+        android:focusable="false"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/notifications_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/search"
+        android:contentDescription="Notifications"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/transparent"
+        android:focusable="false"
+        android:clickable="true" />
+
+    <Button
+        android:id="@+id/profile_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/search"
+        android:contentDescription="Profile"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/transparent"
+        android:focusable="false"
+        android:clickable="true" />
+
+</LinearLayout>

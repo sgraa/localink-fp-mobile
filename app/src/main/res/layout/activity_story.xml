@@ -1,56 +1,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
 
-    <!-- Camera Preview (Full-screen portrait layout) -->
+    <!-- Camera Preview (Full-screen layout for camera view) -->
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreviewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Circle button for capturing photos and videos -->
+    <!-- Flash Button -->
+    <ImageView
+        android:id="@+id/flashIndicator"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_flash_off"
+        android:layout_margin="16dp"
+        android:tint="@color/text_black"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="Flash Button" />
+
+    <!-- Capture Button -->
     <ImageView
         android:id="@+id/captureButton"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:src="@drawable/camera_placeholder"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="160dp" />
+        android:layout_marginBottom="30dp"
+        android:contentDescription="Capture Button" />
 
-    <!-- Text for switching between photo/video mode -->
-    <TextView
-        android:id="@+id/modeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Photo Mode"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/captureButton"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Flash Indicator -->
-    <ImageView
-        android:id="@+id/flashIndicator"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_flash_on" />
-
-    <!-- Profile Button to go back to MainActivity -->
-    <ImageButton
-        android:id="@+id/profileButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/person_placeholder"
-        android:contentDescription="Profile"
-        android:background="?android:attr/selectableItemBackgroundBorderless" />
-
-    <!-- Image Preview (Shows captured image/video) -->
+    <!-- Preview ImageView (Shows captured photo) -->
     <ImageView
         android:id="@+id/previewImageView"
         android:layout_width="200dp"
@@ -58,9 +40,12 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="100dp"
-        android:visibility="gone" /> <!-- Initially hidden -->
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:background="@color/background_gray"
+        android:contentDescription="Preview ImageView" />
 
-    <!-- Upload Button (To upload the captured media to the story) -->
+    <!-- Upload Button -->
     <Button
         android:id="@+id/uploadButton"
         android:layout_width="wrap_content"
@@ -69,9 +54,11 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/previewImageView"
         android:layout_marginTop="16dp"
-        android:visibility="gone" /> <!-- Initially hidden -->
+        android:visibility="gone"
+        android:backgroundTint="@color/secondary_pink"
+        android:textColor="@color/background_gray" />
 
-    <!-- Send Button (To send the captured media to a friend) -->
+    <!-- Send Button -->
     <Button
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
@@ -80,6 +67,20 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/uploadButton"
         android:layout_marginTop="16dp"
-        android:visibility="gone" /> <!-- Initially hidden -->
+        android:visibility="gone"
+        android:backgroundTint="@color/secondary_pink"
+        android:textColor="@color/background_gray" />
 
+    <!-- Profile Button -->
+    <ImageButton
+        android:id="@+id/profileButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/person_placeholder"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:tint="@color/text_black"
+        android:contentDescription="Profile Button" />
 </RelativeLayout>

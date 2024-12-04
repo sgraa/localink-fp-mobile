@@ -24,6 +24,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
     @NonNull
     @Override
     public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate the layout for each friend item
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_friend, parent, false);
         return new FriendViewHolder(view);
@@ -33,25 +34,26 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
         User user = friendsList.get(position);
         holder.username.setText(user.getUsername());
-        // Load the profile picture using Glide (you can replace with your own logic)
+
+        // Load the profile picture using Glide (circular crop for the image)
         Glide.with(holder.profilePic.getContext())
-                .load(user.getProfilePicture())
-                .circleCrop()
+                .load(user.getProfilePicture())  // Ensure that user.getProfilePicture() provides the correct image URL or resource
+                .circleCrop()  // Apply circular crop transformation
                 .into(holder.profilePic);
 
-        // Set click listener on the item
+        // Set click listener on the friend item
         holder.itemView.setOnClickListener(v -> listener.onFriendClick(user));
     }
 
     @Override
     public int getItemCount() {
-        return friendsList.size();
+        return friendsList.size();  // Return the size of the friends list
     }
 
     // ViewHolder class to hold the view references
     public static class FriendViewHolder extends RecyclerView.ViewHolder {
-        TextView username;
-        ImageView profilePic;
+        TextView username;  // TextView for displaying the friend's username
+        ImageView profilePic;  // ImageView for displaying the friend's profile picture
 
         public FriendViewHolder(View itemView) {
             super(itemView);
@@ -62,6 +64,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
     // Interface for item click listener
     public interface OnFriendClickListener {
-        void onFriendClick(User user);
+        void onFriendClick(User user);  // Callback method when a friend item is clicked
     }
 }
