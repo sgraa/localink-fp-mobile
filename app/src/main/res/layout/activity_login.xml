@@ -1,53 +1,141 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_vertical"
-    android:layout_gravity="center">
+    android:padding="24dp"
+    android:gravity="center">
 
-    <!-- Username input (shown in sign up mode) -->
+    <!-- Title (header) -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/inter_bold"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"
+        android:textColor="#000000" />
+
+    <!-- Label and Username input (same for both login and sign up) -->
+    <TextView
+        android:id="@+id/usernameLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="USERNAME"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        android:layout_marginBottom="8dp"
+        android:textSize="14sp"
+        android:visibility="gone"/>
+
     <EditText
         android:id="@+id/usernameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:visibility="gone" /> <!-- Initially hidden -->
+        android:hint="Enter your username"
+        android:inputType="text"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@android:color/black"
+        android:backgroundTint="@android:color/darker_gray"
+        android:paddingBottom="8dp"
+        android:visibility="gone" />
 
-    <!-- Email input -->
-    <EditText
-        android:hint="Email"
-        android:id="@+id/emailInput"
-        android:inputType="textEmailAddress"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
-
-    <!-- Password input -->
-    <EditText
-        android:id="@+id/passwordInput"
+    <!-- Label and Email input -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword" />
+        android:text="EMAIL"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        android:layout_marginBottom="8dp"
+        android:textSize="14sp" />
 
-    <!-- Login/Sign Up button -->
+    <EditText
+        android:id="@+id/emailInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your email"
+        android:inputType="textEmailAddress"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@android:color/black"
+        android:backgroundTint="@android:color/darker_gray"
+        android:paddingBottom="8dp" />
+
+
+    <!-- Label and Password input -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PASSWORD"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@android:color/black"
+            android:backgroundTint="@android:color/darker_gray"
+            android:paddingBottom="8dp" />
+
+        <ImageView
+            android:id="@+id/passwordVisibilityToggle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/eye_visibility"
+            android:contentDescription="Toggle password visibility"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <!-- Forgot Password link (appears only in login mode) -->
+    <TextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Your Password?"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />  <!-- Set visibility to gone by default -->
+
+    <!-- Log In / Sign Up button -->
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Log In" />
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/secondary_pink"
+        android:text="Log In"
+        android:fontFamily="@font/inter_bold"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
 
-    <!-- Toggle text for switching between log in and sign up modes -->
+    <!-- Sign-up Toggle Text -->
     <TextView
         android:id="@+id/toggleSignUpText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Don't have an account? Sign up"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
         android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center" /> <!-- Center the text -->
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>
