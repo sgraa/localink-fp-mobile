@@ -3,6 +3,7 @@ package com.example.localink;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -113,28 +114,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Upload the selected profile picture to Firebase Storage
     private void uploadProfilePicture(Uri imageUri) {
-        String userId = mAuth.getCurrentUser().getUid();
+        String userId = mAuth.getCurrentUser().getUid(); // Pastikan userId valid
+        if (userId == null) {
+            Log.e("Upload", "User ID is null");
+            return; // Jangan lanjut jika userId null
+        }
+
         StorageReference profileImageRef = storageRef.child("profile_pictures/" + userId + ".jpg");
 
-        // Upload image to Firebase Storage
+        // Upload file ke Firebase Storage
         profileImageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // After upload, get the image URL
+                    // Dapatkan URL download setelah upload selesai
                     profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String profileImageUrl = uri.toString();
-                        // Update Firestore with the new image URL
+                        Log.d("Upload", "Image uploaded successfully. URL: " + profileImageUrl);
+
+                        // Simpan URL gambar di Firestore
                         db.collection("users").document(userId).update("profileImageUrl", profileImageUrl)
                                 .addOnSuccessListener(aVoid -> {
-                                    // Update ImageView with the new profile picture
-                                    Glide.with(this).load(profileImageUrl).into(profileImageView);
-                                });
+                                    Log.d("Firestore", "Profile image URL updated in Firestore");
+                                    Glide.with(this).load(profileImageUrl).into(profileImageView); // Update ImageView
+                                })
+                                .addOnFailureListener(e -> Log.e("Firestore", "Failed to update Firestore", e));
                     });
                 })
                 .addOnFailureListener(e -> {
-                    // Handle upload failure (e.g., show error message)
-                    Glide.with(this).load(R.drawable.bijou_image).into(profileImageView); // Fall back to default image
+                    Log.e("Upload", "Image upload failed", e);
+                    Glide.with(this).load(R.drawable.bijou_image).into(profileImageView); // Default image
                 });
     }
 }
