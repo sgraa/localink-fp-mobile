@@ -26,7 +26,7 @@ import androidx.camera.core.ImageCaptureException;
 public class StoryActivity extends AppCompatActivity {
 
     private ImageView captureButton, flashButton, previewImageView;  // For capturing and preview
-    private ImageButton profileButton;
+    private ImageButton profileButton, switchCameraButton;
     private Button sendButton, uploadButton;  // For sending to friend or uploading to story
     private androidx.camera.view.PreviewView cameraPreviewView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -35,6 +35,8 @@ public class StoryActivity extends AppCompatActivity {
     private Camera camera;
     private boolean isFlashOn = false; // Track flash state
     private File capturedPhotoFile;
+    private CameraSelector cameraSelector;
+    private boolean isUsingFrontCamera = true; // Track which camera is being used
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class StoryActivity extends AppCompatActivity {
         uploadButton = findViewById(R.id.uploadButton);
         cameraPreviewView = findViewById(R.id.cameraPreviewView);
         previewImageView = findViewById(R.id.previewImageView); // For displaying captured photo
+        switchCameraButton = findViewById(R.id.switchCameraButton);
 
         // Hide send/upload buttons initially
         sendButton.setVisibility(View.GONE);
@@ -85,14 +88,13 @@ public class StoryActivity extends AppCompatActivity {
         flashButton.setOnClickListener(v -> toggleFlash());
 
         // Set up listener for send button (send photo to friend)
-        sendButton.setOnClickListener(v -> {
-            sendToFriend();
-        });
+        sendButton.setOnClickListener(v -> sendToFriend());
 
         // Set up listener for upload button (upload photo to story)
-        uploadButton.setOnClickListener(v -> {
-            uploadToStory();
-        });
+        uploadButton.setOnClickListener(v -> uploadToStory());
+
+        // Set up listener for switch camera button
+        switchCameraButton.setOnClickListener(v -> switchCamera());
     }
 
     private void setupCamera() {
@@ -117,8 +119,8 @@ public class StoryActivity extends AppCompatActivity {
         imageCapture = new ImageCapture.Builder().build();
 
         // Camera selector (choose front camera for selfie)
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+        cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(isUsingFrontCamera ? CameraSelector.LENS_FACING_FRONT : CameraSelector.LENS_FACING_BACK)
                 .build();
 
         // Bind use cases to camera
@@ -167,16 +169,31 @@ public class StoryActivity extends AppCompatActivity {
         }
     }
 
+    private void switchCamera() {
+        isUsingFrontCamera = !isUsingFrontCamera;  // Toggle the camera
+        if (camera != null) {
+            camera.getCameraControl().enableTorch(false);  // Turn off flash when switching
+        }
+
+        // Rebind camera use cases with the new camera selector
+        ProcessCameraProvider cameraProvider;
+        try {
+            cameraProvider = cameraProviderFuture.get();
+            cameraProvider.unbindAll();  // Unbind current use cases
+            bindCameraUseCases(cameraProvider);  // Bind new camera use cases
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void sendToFriend() {
         // Implement sending the captured photo to a friend
         Toast.makeText(this, "Sending photo to friend...", Toast.LENGTH_SHORT).show();
-        // You can use Firebase or another method to send the photo
     }
 
     private void uploadToStory() {
         // Implement uploading the captured photo to your story
         Toast.makeText(this, "Uploading photo to your story...", Toast.LENGTH_SHORT).show();
-        // You can upload the photo to Firebase or your storage here
     }
 
     // Handle permission result

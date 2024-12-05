@@ -7,7 +7,8 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreviewView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+    </androidx.camera.view.PreviewView>
 
     <!-- Flash Button -->
     <ImageView
@@ -83,4 +84,25 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:tint="@color/text_black"
         android:contentDescription="Profile Button" />
+
+    <!-- Switch Camera Button -->
+    <ImageButton
+        android:id="@+id/switchCameraButton"
+        android:layout_width="123dp"
+        android:layout_height="75dp"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="1dp"
+        android:layout_toEndOf="@id/captureButton"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Switch Camera Button"
+        android:src="@drawable/ic_switch_camera"
+        android:tint="@color/text_black" />
+
 </RelativeLayout>
