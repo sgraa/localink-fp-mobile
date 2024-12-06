@@ -1,0 +1,26 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Circle Background (Red to indicate active recording) -->
+    <item android:right="0dp" android:left="0dp" android:top="0dp" android:bottom="0dp">
+        <shape android:shape="oval">
+            <solid android:color="#FF0000"/> <!-- Red color for the circle -->
+            <size android:width="180dp" android:height="180dp"/>
+        </shape>
+    </item>
+
+    <!-- Hollow Button (Camera Icon Placeholder) -->
+    <item android:left="55dp" android:right="55dp" android:top="55dp" android:bottom="55dp">
+        <shape android:shape="oval">
+            <solid android:color="#FFFFFF"/> <!-- White circle for the button -->
+            <size android:width="70dp" android:height="70dp"/>
+            <stroke android:color="#000000" android:width="2dp"/> <!-- Border color black -->
+        </shape>
+    </item>
+
+    <!-- Red Dot in the center to indicate active recording -->
+    <item android:left="85dp" android:right="85dp" android:top="85dp" android:bottom="85dp">
+        <shape android:shape="oval">
+            <solid android:color="#FF0000"/> <!-- Red dot for recording indicator -->
+            <size android:width="10dp" android:height="10dp"/>
+        </shape>
+    </item>
+</layer-list>

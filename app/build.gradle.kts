@@ -49,9 +49,11 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1") // Add this for Glide annotation processing
 
     // CameraX dependencies
-    implementation("androidx.camera:camera-camera2:1.1.0")
-    implementation("androidx.camera:camera-lifecycle:1.1.0")
+    implementation("androidx.camera:camera-core:1.4.0")
+    implementation("androidx.camera:camera-camera2:1.4.0")
     implementation("androidx.camera:camera-view:1.4.0")
+    implementation("androidx.camera:camera-lifecycle:1.4.0")
+    implementation("androidx.camera:camera-video:1.4.0")
 
     // UI testing dependencies for API 29 compatibility
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

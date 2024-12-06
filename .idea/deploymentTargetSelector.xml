@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-30T19:44:28.640120600Z">
+        <DropdownSelection timestamp="2024-12-06T17:40:13.597533400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=D:\Sighra-2024\Sdk\.android\avd\Pixel_8_Pro_API_34.avd" />

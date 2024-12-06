@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Bubble Background Color -->
+    <solid android:color="@color/secondary_pink" /> <!-- Replace with your desired color -->
+
+    <!-- Rounded Corners -->
+    <corners android:radius="20dp" /> <!-- Adjust the radius as needed -->
+
+    <!-- Border -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/secondary_pink" /> <!-- Replace with your desired border color -->
+</shape>
