@@ -1,72 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
 
+    <!-- Profile Image -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profileImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_gravity="center"
         android:src="@drawable/bijou_image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:outlineSpotShadowColor="@color/secondary_pink"
+        android:outlineAmbientShadowColor="@color/secondary_pink"
         app:shapeAppearanceOverlay="@style/CircularImage" />
 
+    <!-- Username -->
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/profileImageView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:layout_gravity="center"
+        android:text="Bijou"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@android:color/black" />
 
+    <!-- Friend Count -->
     <TextView
         android:id="@+id/friendCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/usernameTextView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:layout_gravity="center"
+        android:text="1 Friends"
+        android:textSize="16sp"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@android:color/black" />
 
-    <Button
-        android:id="@+id/storiesButton"
+    <!-- Stories Section -->
+    <TextView
+        android:id="@+id/storiesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="Stories"
-        app:layout_constraintTop_toBottomOf="@id/friendCountTextView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="32dp" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/inter_bold"
+        android:textColor="@android:color/black" />
 
-    <Button
-        android:id="@+id/friendsButton"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/storiesButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="Add to My Story"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        app:backgroundTint="@android:color/white"
+        android:elevation="9dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ourstoriesButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="Add to Our Story"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        app:backgroundTint="@android:color/white"
+        android:elevation="9dp" />
+
+    <!-- Friends Section -->
+    <TextView
+        android:id="@+id/friendsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Friends"
-        app:layout_constraintTop_toBottomOf="@id/storiesButton"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/inter_bold"
+        android:textColor="@android:color/black" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/friendsButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="Add Friends"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        app:backgroundTint="@android:color/white"
+        android:elevation="9dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/myfriendsButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="My Friends"
+        android:textColor="@color/secondary_pink"
+        android:fontFamily="@font/inter_regular"
+        app:backgroundTint="@android:color/white"
+        android:elevation="9dp" />
+
+    <!-- Logout Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        app:layout_constraintTop_toBottomOf="@id/friendsButton"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center"
+        android:text="Log Out"
+        android:fontFamily="@font/inter_bold"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
