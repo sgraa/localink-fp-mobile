@@ -2,6 +2,7 @@
 package com.example.localink;
 
 import android.content.Intent;
+import android.view.View;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -137,6 +138,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             Tasks.whenAllComplete(tasks)
                     .addOnCompleteListener(task -> {
                         addedFriendsAdapter.notifyDataSetChanged();
+                        friendsAdapter.notifyDataSetChanged();
 
                         // Optionally, show a toast or log
                         Toast.makeText(FriendsActivity.this, "Added friends loaded with stories", Toast.LENGTH_SHORT).show();
@@ -256,7 +258,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
      * @param user   The User object to add as a friend.
      */
     @Override
-    public void onAddFriendClick(User user) {
+    public void onAddFriendClick(User user, View button) {
         String currentUserId = auth.getCurrentUser().getUid();
 
         db.collection("users")
@@ -265,24 +267,24 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                 .document(user.getUid())
                 .set(user)
                 .addOnSuccessListener(unused -> {
+                    // Add the friend to addedFriendsList immediately
+                    addedFriendsList.add(new AddedFriend(user, false));
+
+                    // Remove from search results
+                    friendsList.remove(user);
+
+                    // Update both adapters
+                    friendsAdapter.notifyDataSetChanged();
+                    addedFriendsAdapter.notifyDataSetChanged();
+
                     Toast.makeText(this, "Added " + user.getUsername() + " as friend!", Toast.LENGTH_SHORT).show();
+
+                    // Load added friends to check for stories
                     loadAddedFriends();
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FriendsActivity", "Error adding friend", e);
                     Toast.makeText(this, "Failed to add friend. Try again later.", Toast.LENGTH_SHORT).show();
                 });
-    }
-
-    /**
-     * Checks if a user is already added as a friend.
-     * (Redundant method - can be removed if not needed elsewhere)
-     *
-     * @param friendId The UID of the friend to check.
-     * @return True if already added, false otherwise.
-     */
-    private boolean isFriendAlreadyAdded(String friendId) {
-        // This method is redundant as isFriendAdded covers the same functionality
-        return isFriendAdded(friendId);
     }
 }

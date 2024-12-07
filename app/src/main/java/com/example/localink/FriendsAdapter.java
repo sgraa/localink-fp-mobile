@@ -2,6 +2,7 @@
 package com.example.localink;
 
 import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         ItemFriendBinding binding = ItemFriendBinding.inflate(inflater, parent, false);
         return new FriendViewHolder(binding);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
@@ -88,17 +90,19 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
             // Set click listener on the friend item
             binding.getRoot().setOnClickListener(v -> listener.onFriendClick(user));
-            binding.addFriendButton.setOnClickListener(v -> listener.onAddFriendClick(user));
+            binding.addFriendButton.setOnClickListener(v -> listener.onAddFriendClick(user, binding.addFriendButton));
         }
     }
 
     private boolean isFriendAdded(String friendId) {
+        Log.d("FriendsAdapter", "Checking friendId: " + friendId);
         for (AddedFriend addedFriend : addedFriendsList) {
+            Log.d("FriendsAdapter", "Comparing with added friend: " + addedFriend.getUser().getUid());
             if (addedFriend.getUser().getUid().equals(friendId)) {
-                return true;  // Friend already added
+                return true;
             }
         }
-        return false;  // Friend not added
+        return false;
     }
 
     /**
@@ -106,6 +110,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
      */
     public interface OnFriendClickListener {
         void onFriendClick(User user);
-        void onAddFriendClick (User user);// Callback method when a friend item is clicked
+        void onAddFriendClick (User user, View button);// Callback method when a friend item is clicked
     }
 }

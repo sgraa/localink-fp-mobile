@@ -1,4 +1,3 @@
-// File: AddedFriend.java
 package com.example.localink;
 
 public class AddedFriend {

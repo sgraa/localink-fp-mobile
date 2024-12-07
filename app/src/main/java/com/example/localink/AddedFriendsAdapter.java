@@ -1,4 +1,3 @@
-// File: AddedFriendsAdapter.java
 package com.example.localink;
 
 import android.view.LayoutInflater;
@@ -74,6 +73,9 @@ public class AddedFriendsAdapter extends RecyclerView.Adapter<AddedFriendsAdapte
         public void bind(AddedFriend addedFriend, OnFriendClickListener listener) {
             User user = addedFriend.getUser();
             binding.friendUsername.setText(user.getUsername());
+
+            // Hide the Add Friend button since these are already friends
+            binding.addFriendButton.setVisibility(View.GONE);
 
             // Load the profile picture using Glide with placeholder and error images
             Glide.with(binding.friendProfilePic.getContext())
