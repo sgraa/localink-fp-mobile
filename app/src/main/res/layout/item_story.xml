@@ -1,0 +1,23 @@
+<!-- File: res/layout/item_story.xml -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/storyItemLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- ImageView for Photo Stories -->
+    <ImageView
+        android:id="@+id/storyImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="Story"
+        android:visibility="gone" />
+
+    <!-- VideoView for Video Stories -->
+    <VideoView
+        android:id="@+id/storyVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</FrameLayout>

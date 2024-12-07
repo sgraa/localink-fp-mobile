@@ -1,0 +1,15 @@
+<!-- File: res/drawable/story_indicator_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <!-- Transparent Fill -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Stroke (Ring) -->
+    <stroke
+        android:width="2dp"
+        android:color="#FF5722" /> <!-- Deep Orange ring -->
+
+    <!-- Size Constraints (Optional) -->
+    <size
+        android:width="12dp"
+        android:height="12dp" />
+</shape>

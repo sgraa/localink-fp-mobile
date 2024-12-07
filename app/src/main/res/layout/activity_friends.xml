@@ -74,8 +74,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp" />
-
-    <include
-        android:id="@+id/bottom_nav_menu"
-        layout="@drawable/bottom_nav_menu" />
 </LinearLayout>
