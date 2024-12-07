@@ -62,7 +62,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         addedFriendsList = new ArrayList<>();
 
         // Initialize and set Adapters
-        friendsAdapter = new FriendsAdapter(friendsList, this);
+        friendsAdapter = new FriendsAdapter(friendsList, addedFriendsList, this);
         binding.friendsRecyclerView.setAdapter(friendsAdapter);
 
         addedFriendsAdapter = new AddedFriendsAdapter(addedFriendsList, this);
@@ -254,20 +254,23 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
      * Adds a new friend to the Firestore collection.
      *
      * @param user   The User object to add as a friend.
-     * @param userId The UID of the current user.
      */
-    private void addFriend(User user, String userId) {
-        // Add user to friends collection
-        db.collection("users").document(userId)
-                .collection("friends").document(user.getUid())
+    @Override
+    public void onAddFriendClick(User user) {
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(currentUserId)
+                .collection("friends")
+                .document(user.getUid())
                 .set(user)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(FriendsActivity.this, "Friend added!", Toast.LENGTH_SHORT).show();
-                    loadAddedFriends(); // Reload added friends list
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Added " + user.getUsername() + " as friend!", Toast.LENGTH_SHORT).show();
+                    loadAddedFriends();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FriendsActivity", "Failed to add friend: " + user.getUsername(), e);
-                    Toast.makeText(FriendsActivity.this, "Failed to add friend", Toast.LENGTH_SHORT).show();
+                    Log.e("FriendsActivity", "Error adding friend", e);
+                    Toast.makeText(this, "Failed to add friend. Try again later.", Toast.LENGTH_SHORT).show();
                 });
     }
 

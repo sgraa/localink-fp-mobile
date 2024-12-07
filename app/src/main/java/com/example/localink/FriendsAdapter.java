@@ -21,18 +21,15 @@ import java.util.List;
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendViewHolder> {
 
     private List<User> friendsList;  // List of User
+    private List<AddedFriend> addedFriendsList;  // List of added friends
     private OnFriendClickListener listener;
 
-    /**
-     * Constructor for FriendsAdapter.
-     *
-     * @param friendsList The list of users to display.
-     * @param listener    The listener for click events.
-     */
-    public FriendsAdapter(List<User> friendsList, OnFriendClickListener listener) {
+    public FriendsAdapter(List<User> friendsList, List<AddedFriend> addedFriendsList, OnFriendClickListener listener) {
         this.friendsList = friendsList;
+        this.addedFriendsList = addedFriendsList;
         this.listener = listener;
     }
+
 
     @NonNull
     @Override
@@ -47,6 +44,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
         User user = friendsList.get(position);
         holder.bind(user, listener);
+
+        // Show or hide the "Add Friend" button based on whether the user is already a friend
+        if (isFriendAdded(user.getUid())) {
+            holder.binding.addFriendButton.setVisibility(View.GONE);  // Hide if already added
+        } else {
+            holder.binding.addFriendButton.setVisibility(View.VISIBLE);  // Show if not added
+        }
     }
 
     @Override
@@ -84,13 +88,24 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
             // Set click listener on the friend item
             binding.getRoot().setOnClickListener(v -> listener.onFriendClick(user));
+            binding.addFriendButton.setOnClickListener(v -> listener.onAddFriendClick(user));
         }
+    }
+
+    private boolean isFriendAdded(String friendId) {
+        for (AddedFriend addedFriend : addedFriendsList) {
+            if (addedFriend.getUser().getUid().equals(friendId)) {
+                return true;  // Friend already added
+            }
+        }
+        return false;  // Friend not added
     }
 
     /**
      * Interface for handling friend item click events.
      */
     public interface OnFriendClickListener {
-        void onFriendClick(User user);  // Callback method when a friend item is clicked
+        void onFriendClick(User user);
+        void onAddFriendClick (User user);// Callback method when a friend item is clicked
     }
 }
