@@ -15,13 +15,17 @@
         android:padding="16dp"
         android:layout_above="@id/navigation_bar">
 
-        <!-- Profile Image -->
+        <!-- Profile Image with Shadow -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profileImageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:src="@drawable/bijou_image"
+            android:elevation="8dp"
+            app:strokeWidth="0dp"
+            app:strokeColor="@android:color/transparent"
+            app:cardElevation="8dp"
             app:shapeAppearanceOverlay="@style/CircularImage" />
 
         <!-- Username -->
@@ -72,7 +76,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <com.google.android.material.button.MaterialButton
@@ -86,7 +91,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <!-- Friends Section -->
@@ -112,7 +118,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <com.google.android.material.button.MaterialButton
@@ -126,7 +133,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <ImageButton
