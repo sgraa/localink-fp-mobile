@@ -1,134 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:background="@android:color/white">
 
-    <!-- Profile Image -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profileImageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:src="@drawable/bijou_image"
-        app:shapeAppearanceOverlay="@style/CircularImage" />
-
-    <!-- Username -->
-    <TextView
-        android:id="@+id/usernameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
-        android:text="Bijou"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/inter_regular"
-        android:textColor="@android:color/black" />
-
-    <!-- Friend Count -->
-    <TextView
-        android:id="@+id/friendCountTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center"
-        android:text="1 Friends"
-        android:textSize="16sp"
-        android:fontFamily="@font/inter_regular"
-        android:textColor="@android:color/black" />
-
-    <!-- Stories Section -->
-    <TextView
-        android:id="@+id/storiesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Stories"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/inter_bold"
-        android:textColor="@android:color/black" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/storiesButton"
+    <!-- Profile Section -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:text="Add to My Story"
-        android:textColor="@color/secondary_pink"
-        android:fontFamily="@font/inter_regular"
-        app:backgroundTint="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp"
-        android:elevation="12dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_above="@id/navigation_bar">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/ourstoriesButton"
+        <!-- Profile Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/bijou_image"
+            app:shapeAppearanceOverlay="@style/CircularImage" />
+
+        <!-- Username -->
+        <TextView
+            android:id="@+id/usernameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:text="Bijou"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@android:color/black" />
+
+        <!-- Friend Count -->
+        <TextView
+            android:id="@+id/friendCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:text="1 Friends"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@android:color/black" />
+
+        <!-- Stories Section -->
+        <TextView
+            android:id="@+id/storiesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Stories"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/storiesButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="Add to My Story"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ourstoriesButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Add to Our Story"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="12dp" />
+
+        <!-- Friends Section -->
+        <TextView
+            android:id="@+id/friendsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Friends"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/friendsButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="Add Friends"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/myfriendsButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="My Friends"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="12dp" />
+
+        <ImageButton
+            android:id="@+id/logoutButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/log_out"
+            android:contentDescription="Log Out"
+            android:elevation="12dp"
+            android:background="@drawable/button_logout_background"
+            android:scaleType="centerInside" />
+
+    </LinearLayout>
+
+    <!-- Navigation Bar (Navbar) -->
+    <include
+        android:id="@+id/navigation_bar"
+        layout="@layout/nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="8dp"
-        android:text="Add to Our Story"
-        android:textColor="@color/secondary_pink"
-        android:fontFamily="@font/inter_regular"
-        app:backgroundTint="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp"
-        android:elevation="12dp" />
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true" />
 
-    <!-- Friends Section -->
-    <TextView
-        android:id="@+id/friendsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Friends"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/inter_bold"
-        android:textColor="@android:color/black" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/friendsButton"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:text="Add Friends"
-        android:textColor="@color/secondary_pink"
-        android:fontFamily="@font/inter_regular"
-        app:backgroundTint="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp"
-        android:elevation="12dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/myfriendsButton"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="8dp"
-        android:text="My Friends"
-        android:textColor="@color/secondary_pink"
-        android:fontFamily="@font/inter_regular"
-        app:backgroundTint="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp"
-        android:elevation="12dp" />
-
-    <!-- Logout Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/logoutButton"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_gravity="center"
-        android:text="Log Out"
-        android:fontFamily="@font/inter_bold"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:textColor="@android:color/white"
-        android:elevation="12dp" />
-
-</LinearLayout>
+</RelativeLayout>

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,6 +76,15 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
 
         // Set up search functionality
         setupSearchFunctionality();
+
+        // Initialize and setup the Navbar
+        ImageView navHome = findViewById(R.id.nav_home);
+        ImageView navFriends = findViewById(R.id.nav_friends);
+        ImageButton navStory = findViewById(R.id.nav_story);
+
+        // Set up the Navbar
+        Navbar navbar = new Navbar(FriendsActivity.this);
+        navbar.setupNavigation(navHome, navFriends, navStory);
     }
 
     /**

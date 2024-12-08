@@ -93,6 +93,17 @@
         android:paddingBottom="8dp"
         android:contentDescription="Mode Switch Button" />
 
+    <ImageView
+        android:id="@+id/previewImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:background="@color/background_gray"
+        android:contentDescription="Preview ImageView" />
     <!-- Upload Button -->
     <Button
         android:id="@+id/uploadButton"
@@ -120,4 +131,32 @@
         android:backgroundTint="@color/secondary_pink"
         android:fontFamily="@font/inter_regular"
         android:textColor="@color/background_gray" />
+
+    <!-- Profile Button -->
+    <ImageButton
+        android:id="@+id/profileButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/person_placeholder"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        app:tint="@color/text_black"
+        android:scaleType="fitCenter"
+        android:contentDescription="Profile Button" />
+
+    <ImageButton
+        android:id="@+id/switchCameraButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Switch Camera Button"
+        android:src="@drawable/ic_switch_camera"
+        app:tint="@color/text_black"
+        android:scaleType="fitCenter" />
 </RelativeLayout>

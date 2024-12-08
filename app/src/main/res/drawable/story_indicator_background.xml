@@ -6,7 +6,7 @@
     <!-- Stroke (Ring) -->
     <stroke
         android:width="2dp"
-        android:color="#FF5722" /> <!-- Deep Orange ring -->
+        android:color="@color/secondary_pink" /> <!-- Deep Orange ring -->
 
     <!-- Size Constraints (Optional) -->
     <size

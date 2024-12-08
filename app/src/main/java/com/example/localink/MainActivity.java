@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
@@ -20,9 +21,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private StorageReference storageRef;
-    private ImageView profileImageView;
+    private ImageView profileImageView, navFriends, navHome, logoutButton;
+    private ImageButton navStory;
     private TextView usernameTextView, friendCountTextView;
-    private Button storiesButton, friendsButton, logoutButton;
+    private Button storiesButton, friendsButton;
     private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
@@ -42,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
         storiesButton = findViewById(R.id.storiesButton);
         friendsButton = findViewById(R.id.friendsButton);
         logoutButton = findViewById(R.id.logoutButton);
+
+        // Initialize Navbar components
+        navHome = findViewById(R.id.nav_home);
+        navFriends = findViewById(R.id.nav_friends);
+        navStory = findViewById(R.id.nav_story);
+
+        // Set up Navbar navigation
+        Navbar navbar = new Navbar(this);
+        navbar.setupNavigation(navHome, navFriends, navStory);
 
         // Get current user's ID
         String userId = mAuth.getCurrentUser().getUid();
@@ -115,23 +126,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void uploadProfilePicture(Uri imageUri) {
-        String userId = mAuth.getCurrentUser().getUid(); // Pastikan userId valid
+        String userId = mAuth.getCurrentUser().getUid(); // Ensure userId is valid
         if (userId == null) {
             Log.e("Upload", "User ID is null");
-            return; // Jangan lanjut jika userId null
+            return; // Don't proceed if userId is null
         }
 
         StorageReference profileImageRef = storageRef.child("profile_pictures/" + userId + ".jpg");
 
-        // Upload file ke Firebase Storage
+        // Upload file to Firebase Storage
         profileImageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Dapatkan URL download setelah upload selesai
+                    // Get download URL after upload completes
                     profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String profileImageUrl = uri.toString();
                         Log.d("Upload", "Image uploaded successfully. URL: " + profileImageUrl);
 
-                        // Simpan URL gambar di Firestore
+                        // Save the URL in Firestore
                         db.collection("users").document(userId).update("profileImageUrl", profileImageUrl)
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("Firestore", "Profile image URL updated in Firestore");
