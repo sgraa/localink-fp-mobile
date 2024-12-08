@@ -15,8 +15,6 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:src="@drawable/bijou_image"
-        android:outlineSpotShadowColor="@color/secondary_pink"
-        android:outlineAmbientShadowColor="@color/secondary_pink"
         app:shapeAppearanceOverlay="@style/CircularImage" />
 
     <!-- Username -->
@@ -65,7 +63,9 @@
         android:textColor="@color/secondary_pink"
         android:fontFamily="@font/inter_regular"
         app:backgroundTint="@android:color/white"
-        android:elevation="9dp" />
+        app:strokeColor="@android:color/black"
+        app:strokeWidth="1dp"
+        android:elevation="12dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ourstoriesButton"
@@ -76,7 +76,9 @@
         android:textColor="@color/secondary_pink"
         android:fontFamily="@font/inter_regular"
         app:backgroundTint="@android:color/white"
-        android:elevation="9dp" />
+        app:strokeColor="@android:color/black"
+        app:strokeWidth="1dp"
+        android:elevation="12dp" />
 
     <!-- Friends Section -->
     <TextView
@@ -99,7 +101,9 @@
         android:textColor="@color/secondary_pink"
         android:fontFamily="@font/inter_regular"
         app:backgroundTint="@android:color/white"
-        android:elevation="9dp" />
+        app:strokeColor="@android:color/black"
+        app:strokeWidth="1dp"
+        android:elevation="12dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/myfriendsButton"
@@ -110,7 +114,9 @@
         android:textColor="@color/secondary_pink"
         android:fontFamily="@font/inter_regular"
         app:backgroundTint="@android:color/white"
-        android:elevation="9dp" />
+        app:strokeColor="@android:color/black"
+        app:strokeWidth="1dp"
+        android:elevation="12dp" />
 
     <!-- Logout Button -->
     <com.google.android.material.button.MaterialButton
@@ -122,6 +128,7 @@
         android:text="Log Out"
         android:fontFamily="@font/inter_bold"
         android:backgroundTint="@android:color/holo_red_light"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:elevation="12dp" />
 
 </LinearLayout>

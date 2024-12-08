@@ -123,6 +123,7 @@ public class StoryActivity extends AppCompatActivity {
         profileButton = findViewById(R.id.profileButton);
         switchCameraButton = findViewById(R.id.switchCameraButton);
         sendButton = findViewById(R.id.sendButton);
+        ImageButton exitButton = findViewById(R.id.exitButton);
         uploadButton = findViewById(R.id.uploadButton);
         modeTextView = findViewById(R.id.modeTextView); // Ensure this exists in XML
 
@@ -158,6 +159,14 @@ public class StoryActivity extends AppCompatActivity {
             } else {
                 // Switch to Photo Mode
                 switchToPhotoMode();
+            }
+        });
+
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Fungsi untuk kembali ke halaman sebelumnya
+                onBackPressed();
             }
         });
 
@@ -916,5 +925,10 @@ public class StoryActivity extends AppCompatActivity {
                 Log.e("StoryActivity", "Error unbinding camera use cases.", e);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
