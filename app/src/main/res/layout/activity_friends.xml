@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="@android:color/white">
+    android:background="#FFFAFA">
 
     <!-- Main Content Section -->
     <LinearLayout
