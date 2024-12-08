@@ -72,7 +72,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp" />
+            android:elevation="12dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ourstoriesButton"
@@ -85,7 +86,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp" />
+            android:elevation="12dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <!-- Friends Section -->
         <TextView
@@ -110,7 +112,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp" />
+            android:elevation="12dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/myfriendsButton"
@@ -123,7 +126,8 @@
             app:backgroundTint="@android:color/white"
             app:strokeColor="@android:color/black"
             app:strokeWidth="1dp"
-            android:elevation="12dp" />
+            android:elevation="12dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <ImageButton
             android:id="@+id/logoutButton"
