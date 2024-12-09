@@ -5,67 +5,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/navigation_bar"
+    <!-- Shadow di atas Navbar -->
+    <View
+        android:id="@+id/navbar_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/shadow_above_navbar"
+        app:layout_constraintBottom_toTopOf="@id/navbar_card" />
+
+    <!-- Navbar dengan Shadow -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/navbar_card"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints">
+        app:cardElevation="10dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Diary Icon -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/navigation_bar"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:gravity="center">
 
-            <ImageView
-                android:id="@+id/nav_home"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_home"
-                android:contentDescription="Home"
-                android:scaleType="centerInside" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/nav_home"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_home"
+                    android:contentDescription="Home"
+                    android:scaleType="centerInside" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/nav_friends"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_profile_placeholder"
+                    android:contentDescription="Friends"
+                    android:scaleType="centerInside" />
+            </LinearLayout>
+
         </LinearLayout>
-
-        <!-- Placeholder for Floating Button -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <!-- Profile Icon -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/nav_friends"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_profile_placeholder"
-                android:contentDescription="Friends"
-                android:scaleType="centerInside" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <!-- Floating Button -->
     <ImageButton
         android:id="@+id/nav_story"
-        android:layout_width="84dp"
-        android:layout_height="84dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/add_story"
         android:contentDescription="Add"
-        app:layout_constraintBottom_toBottomOf="@id/navigation_bar"
+        android:translationZ="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/navbar_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
