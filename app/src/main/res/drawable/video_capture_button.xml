@@ -1,17 +1,17 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Circle Background -->
+    <!-- Circle Background (Red to indicate active recording) -->
     <item android:right="0dp" android:left="0dp" android:top="0dp" android:bottom="0dp">
         <shape android:shape="oval">
             <solid android:color="#FF0000"/> <!-- Red color for the circle -->
-            <size android:width="180dp" android:height="180dp"/>
+            <size android:width="70dp" android:height="70dp"/>
         </shape>
     </item>
 
     <!-- Hollow Button (Camera Icon Placeholder) -->
-    <item android:left="55dp" android:right="55dp" android:top="55dp" android:bottom="55dp">
+    <item android:left="5dp" android:right="5dp" android:top="5dp" android:bottom="5dp">
         <shape android:shape="oval">
             <solid android:color="#FFFFFF"/> <!-- White circle for the button -->
-            <size android:width="70dp" android:height="70dp"/>
+            <size android:width="60dp" android:height="60dp"/>
             <stroke android:color="#000000" android:width="2dp"/> <!-- Border color black -->
         </shape>
     </item>

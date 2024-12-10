@@ -3,15 +3,15 @@
     <item android:right="0dp" android:left="0dp" android:top="0dp" android:bottom="0dp">
         <shape android:shape="oval">
             <solid android:color="#FF0000"/> <!-- Red color for the circle -->
-            <size android:width="180dp" android:height="180dp"/>
+            <size android:width="80dp" android:height="80dp"/>
         </shape>
     </item>
 
     <!-- Hollow Button (Camera Icon Placeholder) -->
-    <item android:left="55dp" android:right="55dp" android:top="55dp" android:bottom="55dp">
+    <item android:left="10dp" android:right="10dp" android:top="10dp" android:bottom="10dp">
         <shape android:shape="oval">
             <solid android:color="#FFFFFF"/> <!-- White circle for the button -->
-            <size android:width="70dp" android:height="70dp"/>
+            <size android:width="80dp" android:height="80dp"/>
             <stroke android:color="#000000" android:width="2dp"/> <!-- Border color black -->
         </shape>
     </item>
