@@ -694,8 +694,13 @@ public class StoryActivity extends AppCompatActivity {
                         .addOnSuccessListener(documentReference -> {
                             String docId = documentReference.getId();
                             media.setMediaId(docId);
-                            Log.d("StoryActivity", "Firestore document created with ID: " + docId);
-
+                            documentReference.update("mediaId", docId) // Update dokumen Firestore
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("StoryActivity", "mediaId berhasil diperbarui.");
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("StoryActivity", "Gagal memperbarui mediaId di Firestore.", e);
+                                    });
                             // Clean up and reset
                             if (photoFile.exists() && photoFile.delete()) {
                                 Log.d("StoryActivity", "Local photo file deleted");
