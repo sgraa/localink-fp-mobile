@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +19,17 @@ import java.util.List;
  */
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendViewHolder> {
 
-    private List<User> friendsList;  // List of User
-    private List<AddedFriend> addedFriendsList;  // List of added friends
+    private List<User> friendsList;               // List of User from search results
+    private List<AddedFriend> addedFriendsList;   // List of already added friends
     private OnFriendClickListener listener;
 
+    /**
+     * Constructor for FriendsAdapter.
+     *
+     * @param friendsList       List of users from search results.
+     * @param addedFriendsList  List of already added friends to check if a user is already a friend.
+     * @param listener          Listener for click events.
+     */
     public FriendsAdapter(List<User> friendsList, List<AddedFriend> addedFriendsList, OnFriendClickListener listener) {
         this.friendsList = friendsList;
         this.addedFriendsList = addedFriendsList;
@@ -78,11 +83,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
          * @param listener The click listener.
          */
         public void bind(User user, OnFriendClickListener listener) {
-            binding.friendUsername.setText(user.getUsername());
+            // Handle possible null or empty username
+            String username = user.getUsername();
+            if (username == null || username.isEmpty()) {
+                username = user.getUid();  // Fallback to UID if username is missing
+                Log.w("FriendsAdapter", "Username missing for UID: " + user.getUid());
+            }
+            binding.friendUsername.setText(username);
 
             // Load the profile picture using Glide with placeholder and error images
             Glide.with(binding.friendProfilePic.getContext())
-                    .load(user.getProfilePicture())  // URL or resource ID
+                    .load(user.getPhotoUrl())  // URL or resource ID
                     .placeholder(R.drawable.ic_profile_placeholder) // Default placeholder
                     .error(R.drawable.ic_profile_placeholder)       // Placeholder on error
                     .circleCrop()  // Apply circular crop transformation
@@ -90,10 +101,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
             // Set click listener on the friend item
             binding.getRoot().setOnClickListener(v -> listener.onFriendClick(user));
+
+            // Set click listener on the Add Friend button
             binding.addFriendButton.setOnClickListener(v -> listener.onAddFriendClick(user, binding.addFriendButton));
         }
     }
 
+    /**
+     * Checks if a friend is already added.
+     *
+     * @param friendId The UID of the friend to check.
+     * @return True if the friend is already added, false otherwise.
+     */
     private boolean isFriendAdded(String friendId) {
         Log.d("FriendsAdapter", "Checking friendId: " + friendId);
         for (AddedFriend addedFriend : addedFriendsList) {
@@ -110,6 +129,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
      */
     public interface OnFriendClickListener {
         void onFriendClick(User user);
-        void onAddFriendClick (User user, View button);// Callback method when a friend item is clicked
+        void onAddFriendClick(User user, View button);
     }
 }

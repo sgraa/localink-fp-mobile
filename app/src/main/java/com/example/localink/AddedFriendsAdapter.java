@@ -1,10 +1,10 @@
+// File: AddedFriendsAdapter.java
 package com.example.localink;
 
 import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,14 +72,21 @@ public class AddedFriendsAdapter extends RecyclerView.Adapter<AddedFriendsAdapte
          */
         public void bind(AddedFriend addedFriend, OnFriendClickListener listener) {
             User user = addedFriend.getUser();
-            binding.friendUsername.setText(user.getUsername());
+
+            // Handle possible null or empty username
+            String username = user.getUsername();
+            if (username == null || username.isEmpty()) {
+                username = user.getUid(); // Fallback to UID if username is missing
+                Log.w("AddedFriendsAdapter", "Username missing for UID: " + user.getUid());
+            }
+            binding.friendUsername.setText(username);
 
             // Hide the Add Friend button since these are already friends
             binding.addFriendButton.setVisibility(View.GONE);
 
             // Load the profile picture using Glide with placeholder and error images
             Glide.with(binding.friendProfilePic.getContext())
-                    .load(user.getProfilePicture())  // URL or resource ID
+                    .load(user.getPhotoUrl())  // URL or resource ID
                     .placeholder(R.drawable.ic_profile_placeholder) // Default placeholder
                     .error(R.drawable.ic_profile_placeholder)       // Placeholder on error
                     .circleCrop()
@@ -101,6 +108,6 @@ public class AddedFriendsAdapter extends RecyclerView.Adapter<AddedFriendsAdapte
      * Interface for handling added friend item click events.
      */
     public interface OnFriendClickListener {
-        void onFriendClick(AddedFriend addedFriend);  // Callback method when an added friend item is clicked
+        void onFriendClick(AddedFriend addedFriend);
     }
 }

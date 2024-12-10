@@ -13,17 +13,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localink.databinding.ActivityFriendsBinding;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference; // Added import
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +33,18 @@ import java.util.List;
  * FriendsActivity handles displaying both the search results for adding new friends
  * and the list of already added friends with indicators for active stories.
  */
-public class FriendsActivity extends AppCompatActivity implements FriendsAdapter.OnFriendClickListener, AddedFriendsAdapter.OnFriendClickListener {
+public class FriendsActivity extends AppCompatActivity implements
+        FriendsAdapter.OnFriendClickListener,
+        AddedFriendsAdapter.OnFriendClickListener {
 
     private ActivityFriendsBinding binding;             // View Binding instance for activity_friends.xml
     private FriendsAdapter friendsAdapter;               // Adapter for search results
     private AddedFriendsAdapter addedFriendsAdapter;     // Adapter for added friends
-    private List<User> friendsList;                       // List of users from search
+    private List<User> friendsList;                      // List of users from search
     private List<AddedFriend> addedFriendsList;           // List of added friends with story status
-    private FirebaseFirestore db;                         // Firestore instance
-    private FirebaseAuth auth;                            // FirebaseAuth instance
-    private FirebaseFunctions functions;                  // FirebaseFunctions instance
+    private FirebaseFirestore db;                        // Firestore instance
+    private FirebaseAuth auth;                           // FirebaseAuth instance
+    private FirebaseUser currentUser;                    // Current authenticated user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,16 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         // Initialize Firebase instances
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        functions = FirebaseFunctions.getInstance();
+        currentUser = auth.getCurrentUser();
+
+        // Check if user is authenticated
+        if (currentUser == null) {
+            // Not signed in, redirect to LoginActivity
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // Set LayoutManagers for RecyclerViews
         binding.friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -82,7 +94,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
         ImageView navFriends = findViewById(R.id.nav_friends);
         ImageButton navStory = findViewById(R.id.nav_story);
 
-        // Set up the Navbar
+        // Set up the Navbar (Assuming Navbar is a custom class handling navigation)
         Navbar navbar = new Navbar(FriendsActivity.this);
         navbar.setupNavigation(navHome, navFriends, navStory);
     }
@@ -113,17 +125,18 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
      * Loads the list of added friends from Firestore and checks for active stories.
      */
     private void loadAddedFriends() {
-        String userId = auth.getCurrentUser().getUid();
+        String userId = currentUser.getUid();
         CollectionReference friendsRef = db.collection("users").document(userId).collection("friends");
 
         friendsRef.get().addOnSuccessListener(querySnapshot -> {
             addedFriendsList.clear();
-            List<Task<QuerySnapshot>> tasks = new ArrayList<>();
+            List<Task<?>> tasks = new ArrayList<>();
 
             for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                 User user = documentSnapshot.toObject(User.class);
                 if (user != null) {
                     user.setUid(documentSnapshot.getId());  // Set the UID manually
+                    Log.d("FriendsActivity", "Loaded friend: " + user.getUsername() + " (UID: " + user.getUid() + ")");
 
                     // Check if the friend has an active story
                     Task<QuerySnapshot> task = db.collection("users")
@@ -134,6 +147,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                             .addOnSuccessListener(storyQuerySnapshot -> {
                                 boolean hasActiveStory = !storyQuerySnapshot.isEmpty();
                                 addedFriendsList.add(new AddedFriend(user, hasActiveStory));
+                                Log.d("FriendsActivity", "Friend " + user.getUsername() + " has active story: " + hasActiveStory);
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("FriendsActivity", "Error fetching stories for friend: " + user.getUsername(), e);
@@ -142,6 +156,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                             });
 
                     tasks.add(task);
+                } else {
+                    Log.w("FriendsActivity", "Encountered null user in friends list.");
                 }
             }
 
@@ -174,7 +190,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
             return;
         }
 
-        String userId = auth.getCurrentUser().getUid();
+        String userId = currentUser.getUid();
 
         db.collection("users")
                 .whereEqualTo("username", query)
@@ -188,6 +204,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
                                 user.setUid(doc.getId());  // Set the UID manually
                                 if (!user.getUid().equals(userId) && !isFriendAdded(user.getUid())) {
                                     friendsList.add(user);
+                                    Log.d("FriendsActivity", "Found user: " + user.getUsername() + " (UID: " + user.getUid() + ")");
                                 }
                             }
                         }
@@ -264,31 +281,99 @@ public class FriendsActivity extends AppCompatActivity implements FriendsAdapter
     }
 
     /**
-     * Adds a new friend to the Firestore collection.
+     * Adds a new friend to the Firestore collection ensuring mutual friendship.
      *
      * @param user   The User object to add as a friend.
+     * @param button The button view that was clicked (for potential UI feedback).
      */
     @Override
     public void onAddFriendClick(User user, View button) {
-        String currentUserId = auth.getCurrentUser().getUid();
+        String currentUserId = currentUser.getUid();
 
-        db.collection("users")
+        // Fetch the current user's username from Firestore
+        db.collection("users").document(currentUserId).get()
+                .addOnSuccessListener(document -> {
+                    String currentUsername = "Unknown";
+                    String currentEmail = currentUser.getEmail();
+                    String currentPhotoUrl = (currentUser.getPhotoUrl() != null) ? currentUser.getPhotoUrl().toString() : null;
+
+                    if (document.exists()) {
+                        // If a username is stored in Firestore, use that
+                        String fetchedUsername = document.getString("username");
+                        if (fetchedUsername != null && !fetchedUsername.isEmpty()) {
+                            currentUsername = fetchedUsername;
+                        }
+                        // Optionally, fetch email/photoUrl from Firestore if you stored them
+                        String fetchedEmail = document.getString("email");
+                        if (fetchedEmail != null && !fetchedEmail.isEmpty()) {
+                            currentEmail = fetchedEmail;
+                        }
+
+                        String fetchedPhotoUrl = document.getString("photoUrl");
+                        if (fetchedPhotoUrl != null && !fetchedPhotoUrl.isEmpty()) {
+                            currentPhotoUrl = fetchedPhotoUrl;
+                        }
+                    }
+
+                    addFriendWithUserData(user, currentUserId, currentUsername, currentEmail, currentPhotoUrl);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FriendsActivity", "Failed to fetch current user data", e);
+                    // Fallback to unknown username
+                    addFriendWithUserData(user, currentUserId, "Unknown", currentUser.getEmail(), currentUser.getPhotoUrl() != null ? currentUser.getPhotoUrl().toString() : null);
+                });
+    }
+
+    private void addFriendWithUserData(User friendToAdd, String currentUserId, String currentUsername, String currentEmail, String currentPhotoUrl) {
+        CollectionReference currentUserFriendsRef = db.collection("users")
                 .document(currentUserId)
-                .collection("friends")
-                .document(user.getUid())
-                .set(user)
-                .addOnSuccessListener(unused -> {
+                .collection("friends");
+
+        CollectionReference selectedUserFriendsRef = db.collection("users")
+                .document(friendToAdd.getUid())
+                .collection("friends");
+
+        WriteBatch batch = db.batch();
+
+        Log.d("FriendsActivity", "Adding friend: " + friendToAdd.getUsername() + " (UID: " + friendToAdd.getUid() + ")");
+
+        // Add selected user to current user's friends
+        User friendUser = new User(
+                friendToAdd.getUid(),
+                friendToAdd.getUsername(),
+                friendToAdd.getEmail(),
+                friendToAdd.getPhotoUrl()
+        );
+        DocumentReference currentUserFriendDoc = currentUserFriendsRef.document(friendToAdd.getUid());
+        batch.set(currentUserFriendDoc, friendUser);
+
+        // Create a User object for the current user to add to the selected friend's collection
+        User currentUserObj = new User(
+                currentUserId,
+                currentUsername,
+                currentEmail,
+                currentPhotoUrl
+        );
+
+        Log.d("FriendsActivity", "Adding current user to friend's friends: " + currentUserObj.getUsername() + " (UID: " + currentUserObj.getUid() + ")");
+
+        DocumentReference selectedUserFriendDoc = selectedUserFriendsRef.document(currentUserId);
+        batch.set(selectedUserFriendDoc, currentUserObj);
+
+        // Commit the batch
+        batch.commit()
+                .addOnSuccessListener(aVoid -> {
                     // Add the friend to addedFriendsList immediately
-                    addedFriendsList.add(new AddedFriend(user, false));
+                    addedFriendsList.add(new AddedFriend(friendToAdd, false));
 
                     // Remove from search results
-                    friendsList.remove(user);
+                    friendsList.remove(friendToAdd);
 
                     // Update both adapters
                     friendsAdapter.notifyDataSetChanged();
                     addedFriendsAdapter.notifyDataSetChanged();
 
-                    Toast.makeText(this, "Added " + user.getUsername() + " as friend!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Added " + friendToAdd.getUsername() + " as friend!", Toast.LENGTH_SHORT).show();
 
                     // Load added friends to check for stories
                     loadAddedFriends();
