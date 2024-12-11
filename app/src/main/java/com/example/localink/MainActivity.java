@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
     private TextView locationTextView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         storiesButton = findViewById(R.id.storiesButton);
         friendsButton = findViewById(R.id.friendsButton);
         logoutButton = findViewById(R.id.logoutButton);
-        locationTextView = findViewById(R.id.locationTextView); // Ensure you have a TextView for location
+        locationTextView = findViewById(R.id.locationTextView);
 
         // Initialize Navbar components
         navHome = findViewById(R.id.nav_home);
@@ -79,16 +78,16 @@ public class MainActivity extends AppCompatActivity {
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 String username = documentSnapshot.getString("username");
-                String profileImageUrl = documentSnapshot.getString("profileImageUrl");
+                String photoUrl = documentSnapshot.getString("photoUrl");  // Changed to match database field
 
                 // Set username
                 usernameTextView.setText(username);
 
                 // Load profile image if available, otherwise use default
-                if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                    Glide.with(this).load(profileImageUrl).into(profileImageView);
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    Glide.with(this).load(photoUrl).into(profileImageView);
                 } else {
-                    Glide.with(this).load(R.drawable.bijou_image).into(profileImageView); // Default profile picture
+                    Glide.with(this).load(R.drawable.bijou_image).into(profileImageView);
                 }
             } else {
                 // If the document does not exist, set default image
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Check if the location permission is granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fetchLocation(); // Fetch location if permission is granted
+            fetchLocation();
         } else {
             // Request permission if not granted
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -124,10 +123,9 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
         });
 
-        // Tambahkan inisialisasi untuk userstoriesButton
+        // Initialize userstoriesButton
         Button userstoriesButton = findViewById(R.id.userstoriesButton);
         userstoriesButton.setOnClickListener(v -> {
-            // Open UserStoryActivity when "View My Stories" is clicked
             Intent intent = new Intent(MainActivity.this, UserStoryActivity.class);
             startActivity(intent);
         });
@@ -149,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
             startActivity(intent);
         });
-
 
         // Handle logout action
         logoutButton.setOnClickListener(v -> {
@@ -175,10 +172,8 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Permission granted, fetch the location
             fetchLocation();
         } else {
-            // Permission denied
             locationTextView.setText("Location: Permission denied");
         }
     }
@@ -213,11 +208,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (addresses != null && !addresses.isEmpty()) {
             Address address = addresses.get(0);
+            String addressLine = address.getAddressLine(0);
 
-            // Ambil komponen alamat
-            String addressLine = address.getAddressLine(0);  // Nama jalan
-
-            // Gabungkan informasi alamat
             StringBuilder locationDetails = new StringBuilder();
             if (addressLine != null) locationDetails.append(addressLine).append(", ");
 
@@ -227,37 +219,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void uploadProfilePicture(Uri imageUri) {
-        String userId = mAuth.getCurrentUser().getUid(); // Ensure userId is valid
+        String userId = mAuth.getCurrentUser().getUid();
         if (userId == null) {
             Log.e("Upload", "User ID is null");
-            return; // Don't proceed if userId is null
+            return;
         }
 
         StorageReference profileImageRef = storageRef.child("profile_pictures/" + userId + ".jpg");
 
-        // Upload file to Firebase Storage
         profileImageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Get download URL after upload completes
                     profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String profileImageUrl = uri.toString();
-                        Log.d("Upload", "Image uploaded successfully. URL: " + profileImageUrl);
+                        String photoUrl = uri.toString();  // Changed variable name to match database field
+                        Log.d("Upload", "Image uploaded successfully. URL: " + photoUrl);
 
-                        // Save the URL in Firestore
-                        db.collection("users").document(userId).update("profileImageUrl", profileImageUrl)
+                        // Update to use photoUrl field name
+                        db.collection("users").document(userId).update("photoUrl", photoUrl)  // Changed to match database field
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("Firestore", "Profile image URL updated in Firestore");
-                                    Glide.with(this).load(profileImageUrl).into(profileImageView); // Update ImageView
+                                    Glide.with(this).load(photoUrl).into(profileImageView);
                                 })
                                 .addOnFailureListener(e -> Log.e("Firestore", "Failed to update Firestore", e));
                     });
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Upload", "Image upload failed", e);
-                    Glide.with(this).load(R.drawable.bijou_image).into(profileImageView); // Default image
+                    Glide.with(this).load(R.drawable.bijou_image).into(profileImageView);
                 });
     }
 }

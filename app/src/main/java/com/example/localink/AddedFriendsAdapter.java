@@ -85,14 +85,18 @@ public class AddedFriendsAdapter extends RecyclerView.Adapter<AddedFriendsAdapte
             binding.addFriendButton.setVisibility(View.GONE);
 
             // Load the profile picture using Glide with placeholder and error images
-            Glide.with(binding.friendProfilePic.getContext())
-                    .load(user.getPhotoUrl())  // URL or resource ID
-                    .placeholder(R.drawable.ic_profile_placeholder) // Default placeholder
-                    .error(R.drawable.ic_profile_placeholder)       // Placeholder on error
-                    .circleCrop()
-                    .into(binding.friendProfilePic);
+            String profileImageUrl = user.getPhotoUrl(); // Make sure this matches your User class getter
+            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                Glide.with(binding.friendProfilePic.getContext())
+                        .load(profileImageUrl)
+                        .placeholder(R.drawable.ic_profile_placeholder)
+                        .error(R.drawable.ic_profile_placeholder)
+                        .circleCrop()
+                        .into(binding.friendProfilePic);
+            } else {
+                binding.friendProfilePic.setImageResource(R.drawable.ic_profile_placeholder);
+            }
 
-            // Set the story indicator visibility
             if (addedFriend.hasActiveStory()) {
                 binding.storyIndicator.setVisibility(View.VISIBLE);
             } else {

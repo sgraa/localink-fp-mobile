@@ -47,7 +47,7 @@ dependencies {
     implementation("com.google.firebase:firebase-functions:21.1.0")
 
     // Google Play Services Location for location services
-    implementation("com.google.android.gms:play-services-location:18.0.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     // Other dependencies
     implementation("androidx.appcompat:appcompat:1.6.1")
