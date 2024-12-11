@@ -74,7 +74,7 @@ public class StoryViewerActivity extends AppCompatActivity {
                 .document(friendUserId)
                 .collection("stories")
                 .whereGreaterThan("expiresAt", System.currentTimeMillis())
-                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .orderBy("createdAt", Query.Direction.ASCENDING) // Updated field
                 .addSnapshotListener((querySnapshot, e) -> {
                     if (e != null) {
                         Toast.makeText(this, "Error fetching friend's stories.", Toast.LENGTH_SHORT).show();
