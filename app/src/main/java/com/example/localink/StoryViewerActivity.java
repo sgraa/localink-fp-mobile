@@ -2,10 +2,10 @@
 package com.example.localink;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,6 +26,7 @@ public class StoryViewerActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private StoryAdapter storyAdapter;
     private List<Media> mediaList;
+    private ImageButton closeStoryButton;
     private ListenerRegistration storiesListener;
 
     private Handler handler = new Handler();
@@ -37,9 +38,8 @@ public class StoryViewerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_story_viewer);
 
         storyViewPager = findViewById(R.id.storyViewPager);
-
+        closeStoryButton = findViewById(R.id.closeStoryButton);
         firestore = FirebaseFirestore.getInstance();
-
         mediaList = new ArrayList<>();
 
         // Initialize the adapter
@@ -66,6 +66,11 @@ public class StoryViewerActivity extends AppCompatActivity {
                 handler.postDelayed(advanceStoryRunnable, 5000); // Advance every 5 seconds
             }
         };
+
+        closeStoryButton.setOnClickListener(v -> {
+            // Menutup aktivitas saat tombol close ditekan
+            finish();
+        });
     }
 
     private void loadFriendStories(String friendUserId) {
