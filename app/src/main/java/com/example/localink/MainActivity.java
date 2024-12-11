@@ -144,6 +144,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button myfriendsButton = findViewById(R.id.myfriendsButton);
+        myfriendsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+            startActivity(intent);
+        });
+
+
         // Handle logout action
         logoutButton.setOnClickListener(v -> {
             mAuth.signOut();

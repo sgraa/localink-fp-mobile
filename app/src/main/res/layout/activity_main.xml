@@ -1,219 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFAFA"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="#FFFAFA">
+    tools:context=".UserStoryActivity">
 
     <!-- ScrollView to make content scrollable -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="130dp"> <!-- This prevents overlap with the navbar -->
-        <LinearLayout
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/navigation_bar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Profile Section -->
+        <TextView
+            android:id="@+id/profileHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="Profile"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@android:color/black" />
 
-            <!-- Profile Section -->
+        <!-- Profile Image with Shadow -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/bijou_image"
+            android:elevation="8dp"
+            app:strokeWidth="0dp"
+            app:strokeColor="@android:color/transparent"
+            app:cardElevation="8dp"
+            android:outlineSpotShadowColor="@color/secondary_pink"
+            android:outlineAmbientShadowColor="@color/secondary_pink"
+            app:shapeAppearanceOverlay="@style/CircularImage" />
+
+        <!-- Username -->
+        <TextView
+            android:id="@+id/usernameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:text="Bijou"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@android:color/black" />
+
+        <!-- Friend Count -->
+        <TextView
+            android:id="@+id/friendCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:text="1 Friends"
+            android:textSize="18sp"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@color/primary_blue"
+            android:textStyle="bold" />
+
+        <!-- Location Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/primary_blue"
+            app:cardCornerRadius="100dp"
+            app:cardElevation="4dp"
+            android:layout_marginHorizontal="140dp"
+            app:cardBackgroundColor="@android:color/white">
+
             <TextView
-                android:id="@+id/profileHeaderTextView"
+                android:id="@+id/myLocationTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="Profile"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@android:color/black" />
-
-            <!-- Profile Image with Shadow -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profileImageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/bijou_image"
-                android:elevation="8dp"
-                app:strokeWidth="0dp"
-                app:strokeColor="@android:color/transparent"
-                app:cardElevation="8dp"
-                android:outlineSpotShadowColor="@color/secondary_pink"
-                android:outlineAmbientShadowColor="@color/secondary_pink"
-                app:shapeAppearanceOverlay="@style/CircularImage" />
-
-            <!-- Username -->
-            <TextView
-                android:id="@+id/usernameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_gravity="center"
-                android:text="Bijou"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/inter_regular"
-                android:textColor="@android:color/black" />
-
-            <!-- Friend Count -->
-            <TextView
-                android:id="@+id/friendCountTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="center"
-                android:text="1 Friends"
-                android:textSize="18sp"
-                android:fontFamily="@font/inter_regular"
-                android:textColor="@color/primary_blue"
-                android:textStyle="bold" />
-
-            <!-- Location Section -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/primary_blue"
-                app:cardCornerRadius="100dp"
-                app:cardElevation="4dp"
-                android:layout_marginHorizontal="140dp"
-                app:cardBackgroundColor="@android:color/white">
-
-                <TextView
-                    android:id="@+id/myLocationTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="4dp"
-                    android:text="My Location"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/inter_bold"
-                    android:textColor="@android:color/white"
-                    android:gravity="center"
-                    android:textStyle="bold"/>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Location TextView -->
-            <TextView
-                android:id="@+id/locationTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="center"
-                android:text="Location: Unknown"
+                android:padding="4dp"
+                android:text="My Location"
                 android:textSize="12sp"
-                android:fontFamily="@font/inter_regular"
-                android:textColor="@android:color/black"
-                android:gravity="center" />
-
-            <!-- Stories Section -->
-            <TextView
-                android:id="@+id/storiesTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="Stories"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:fontFamily="@font/inter_bold"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:textStyle="bold"/>
+        </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/storiesButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:text="Add to My Story"
-                android:textColor="@color/secondary_pink"
-                android:fontFamily="@font/inter_regular"
-                app:backgroundTint="@android:color/white"
-                app:strokeColor="@android:color/black"
-                app:strokeWidth="1dp"
-                android:elevation="8dp"
-                android:stateListAnimator="@null"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
+        <!-- Location TextView -->
+        <TextView
+            android:id="@+id/locationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:text="Location: Unknown"
+            android:textSize="12sp"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@android:color/black"
+            android:gravity="center" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/userstoriesButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:text="View Friends Stories"
-                android:textColor="@color/secondary_pink"
-                android:fontFamily="@font/inter_regular"
-                app:backgroundTint="@android:color/white"
-                app:strokeColor="@android:color/black"
-                app:strokeWidth="1dp"
-                android:elevation="8dp"
-                android:stateListAnimator="@null"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
+        <!-- Stories Section -->
+        <TextView
+            android:id="@+id/storiesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Stories"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@android:color/black" />
 
-            <!-- Friends Section -->
-            <TextView
-                android:id="@+id/friendsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Friends"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@android:color/black" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/storiesButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="Add to My Story"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/friendsButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:text="Add Friends"
-                android:textColor="@color/secondary_pink"
-                android:fontFamily="@font/inter_regular"
-                app:backgroundTint="@android:color/white"
-                app:strokeColor="@android:color/black"
-                app:strokeWidth="1dp"
-                android:elevation="8dp"
-                android:stateListAnimator="@null"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/userstoriesButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="View Friends Stories"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/myfriendsButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:text="My Friends"
-                android:textColor="@color/secondary_pink"
-                android:fontFamily="@font/inter_regular"
-                app:backgroundTint="@android:color/white"
-                app:strokeColor="@android:color/black"
-                app:strokeWidth="1dp"
-                android:elevation="8dp"
-                android:stateListAnimator="@null"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
+        <!-- Friends Section -->
+        <TextView
+            android:id="@+id/friendsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Friends"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@android:color/black" />
 
-            <ImageButton
-                android:id="@+id/logoutButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="24dp"
-                android:layout_gravity="center"
-                android:src="@drawable/log_out"
-                android:contentDescription="Log Out"
-                android:elevation="12dp"
-                android:background="@drawable/button_logout_background"
-                android:scaleType="centerInside" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/friendsButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="Add Friends"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
-        </LinearLayout>
-    </ScrollView>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/myfriendsButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="My Friends"
+            android:textColor="@color/secondary_pink"
+            android:fontFamily="@font/inter_regular"
+            app:backgroundTint="@android:color/white"
+            app:strokeColor="@android:color/black"
+            app:strokeWidth="1dp"
+            android:elevation="8dp"
+            android:stateListAnimator="@null"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
-    <!-- Navigation Bar (Navbar) -->
-    <include
-        android:id="@+id/navigation_bar"
-        layout="@layout/nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_alignParentBottom="true" />
+        <ImageButton
+            android:id="@+id/logoutButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/log_out"
+            android:contentDescription="Log Out"
+            android:elevation="12dp"
+            android:background="@drawable/button_logout_background"
+            android:scaleType="centerInside" />
 
-</RelativeLayout>
+    </LinearLayout>
+</ScrollView>
+
+    <!-- Navigation Bar (Navbar) outside the ScrollView -->
+<include
+android:id="@+id/navigation_bar"
+layout="@layout/nav_bar"
+android:layout_width="match_parent"
+android:layout_height="72dp"
+app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,23 +6,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.localink.Media;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
-import java.util.ArrayList;
-
-
 
 public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.UserStoryViewHolder> {
 
     private List<Media> mediaList;
     private Context context;
+    private FirebaseFirestore firestore;
 
     public UserStoryAdapter(List<Media> mediaList, Context context) {
         this.mediaList = mediaList;
         this.context = context;
+        this.firestore = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -36,13 +39,20 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.User
     public void onBindViewHolder(@NonNull UserStoryViewHolder holder, int position) {
         Media media = mediaList.get(position);
 
-        // Load the image from the URL using Glide or Picasso
+        // Load the image from the URL using Glide
         Glide.with(context)
                 .load(media.getDownloadUrl())
                 .into(holder.storyImageView);
 
-        // Optional: Set other data like the time
-        holder.storyTime.setText("Story created at: " + media.getCreatedAt());
+        // Fetch the username of the friend from Firestore
+        firestore.collection("users").document(media.getUserId())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String username = documentSnapshot.getString("username");
+                        holder.usernameTextView.setText(username);
+                    }
+                });
     }
 
     @Override
@@ -52,12 +62,12 @@ public class UserStoryAdapter extends RecyclerView.Adapter<UserStoryAdapter.User
 
     public static class UserStoryViewHolder extends RecyclerView.ViewHolder {
         ImageView storyImageView;
-        TextView storyTime;
+        TextView usernameTextView;
 
         public UserStoryViewHolder(View itemView) {
             super(itemView);
             storyImageView = itemView.findViewById(R.id.storyImageView);
-            storyTime = itemView.findViewById(R.id.storyTime);
+            usernameTextView = itemView.findViewById(R.id.usernameTextView); // Only username TextView
         }
     }
 }
