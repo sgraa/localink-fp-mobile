@@ -94,6 +94,14 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
         });
 
+        // Tambahkan inisialisasi untuk userstoriesButton
+        Button userstoriesButton = findViewById(R.id.userstoriesButton);
+        userstoriesButton.setOnClickListener(v -> {
+            // Open UserStoryActivity when "View My Stories" is clicked
+            Intent intent = new Intent(MainActivity.this, UserStoryActivity.class);
+            startActivity(intent);
+        });
+
         // Navigate to stories screen
         storiesButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, StoryActivity.class);

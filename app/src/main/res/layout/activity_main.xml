@@ -97,11 +97,11 @@
             app:shapeAppearanceOverlay="@style/ShapeAppearance.App.Corner" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/ourstoriesButton"
+            android:id="@+id/userstoriesButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
-            android:text="Add to Our Story"
+            android:text="View Friends Stories"
             android:textColor="@color/secondary_pink"
             android:fontFamily="@font/inter_regular"
             app:backgroundTint="@android:color/white"
