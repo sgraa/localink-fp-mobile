@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView toggleSignUpText, titleText, usernameLabel;
     private ImageView passwordVisibilityToggle;
 
-    private boolean isLoginMode = true; // Track whether the activity is in login mode or sign-up mode
+    private boolean isLoginMode = true; // Default mode is login
     private boolean isPasswordVisible = false; // Track password visibility
 
     @Override
@@ -49,6 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         titleText = findViewById(R.id.title); // Bind title TextView for dynamic changes
         passwordVisibilityToggle = findViewById(R.id.passwordVisibilityToggle);
 
+        // Check if activity is opened in Sign-Up mode
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra("isSignUpMode", false)) {
+            switchToSignUpMode();
+        }
+
         // Set click listener for login button
         loginButton.setOnClickListener(v -> {
             String email = emailInput.getText().toString().trim();
@@ -69,21 +75,9 @@ public class LoginActivity extends AppCompatActivity {
         // Toggle between login and sign-up
         toggleSignUpText.setOnClickListener(v -> {
             if (isLoginMode) {
-                // Switch to sign-up mode
-                isLoginMode = false;
-                loginButton.setText("Sign Up");
-                titleText.setText("Sign Up");
-                toggleSignUpText.setText("Already have an account? Log in");
-                usernameInput.setVisibility(View.VISIBLE);
-                usernameLabel.setVisibility(View.VISIBLE);// Show username input
+                switchToSignUpMode();
             } else {
-                // Switch to login mode
-                isLoginMode = true;
-                loginButton.setText("Log In");
-                titleText.setText("Log In");
-                toggleSignUpText.setText("Don't have an account? Sign up");
-                usernameInput.setVisibility(View.GONE); // Hide username input
-                usernameLabel.setVisibility(View.GONE);
+                switchToLoginMode();
             }
         });
 
@@ -99,6 +93,24 @@ public class LoginActivity extends AppCompatActivity {
                 isPasswordVisible = true;
             }
         });
+    }
+
+    private void switchToSignUpMode() {
+        isLoginMode = false;
+        loginButton.setText("Sign Up");
+        titleText.setText("Sign Up");
+        toggleSignUpText.setText("Already have an account? Log in");
+        usernameInput.setVisibility(View.VISIBLE);
+        usernameLabel.setVisibility(View.VISIBLE); // Show username input
+    }
+
+    private void switchToLoginMode() {
+        isLoginMode = true;
+        loginButton.setText("Log In");
+        titleText.setText("Log In");
+        toggleSignUpText.setText("Don't have an account? Sign up");
+        usernameInput.setVisibility(View.GONE); // Hide username input
+        usernameLabel.setVisibility(View.GONE);
     }
 
     private void loginUser(String email, String password) {

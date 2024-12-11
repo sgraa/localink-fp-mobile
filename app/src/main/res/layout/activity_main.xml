@@ -15,6 +15,18 @@
         android:padding="16dp"
         android:layout_above="@id/navigation_bar">
 
+        <TextView
+            android:id="@+id/profileHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="Profile"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/inter_bold"
+            android:textColor="@android:color/black" />
+
         <!-- Profile Image with Shadow -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profileImageView"
@@ -26,6 +38,8 @@
             app:strokeWidth="0dp"
             app:strokeColor="@android:color/transparent"
             app:cardElevation="8dp"
+            android:outlineSpotShadowColor="@color/secondary_pink"
+            android:outlineAmbientShadowColor="@color/secondary_pink"
             app:shapeAppearanceOverlay="@style/CircularImage" />
 
         <!-- Username -->
@@ -49,9 +63,11 @@
             android:layout_marginTop="8dp"
             android:layout_gravity="center"
             android:text="1 Friends"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:fontFamily="@font/inter_regular"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/primary_blue"
+            android:textStyle="bold" />
+
 
         <!-- Stories Section -->
         <TextView
