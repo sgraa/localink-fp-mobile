@@ -127,14 +127,12 @@ public class StoryActivity extends AppCompatActivity {
         uploadButton = findViewById(R.id.uploadButton);
         modeTextView = findViewById(R.id.modeTextView); // Ensure this exists in XML
 
-        // Check if capture buttons are correctly linked
+        // Log for missing capture buttons
         if (capturePhotoButton == null) {
-            Toast.makeText(this, "Capture Photo button not found in layout", Toast.LENGTH_SHORT).show();
             Log.e("StoryActivity", "Capture Photo button (capturePhotoButton) not found.");
         }
 
         if (captureVideoButton == null) {
-            Toast.makeText(this, "Capture Video button not found in layout", Toast.LENGTH_SHORT).show();
             Log.e("StoryActivity", "Capture Video button (captureVideoButton) not found.");
         }
 
@@ -154,21 +152,13 @@ public class StoryActivity extends AppCompatActivity {
         // Set up mode switch listener
         modeSwitchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                // Switch to Video Mode
                 switchToVideoMode();
             } else {
-                // Switch to Photo Mode
                 switchToPhotoMode();
             }
         });
 
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Fungsi untuk kembali ke halaman sebelumnya
-                onBackPressed();
-            }
-        });
+        exitButton.setOnClickListener(v -> onBackPressed());
 
         // Set up capture buttons
         if (capturePhotoButton != null) {
@@ -198,11 +188,6 @@ public class StoryActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Checks if the app has all the necessary permissions.
-     *
-     * @return true if all permissions are granted, false otherwise.
-     */
     private boolean hasPermissions() {
         boolean cameraGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
         boolean audioGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
@@ -240,12 +225,8 @@ public class StoryActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Requests all necessary permissions based on the Android version.
-     */
     private void requestNecessaryPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33+
-            // For Android 13 and above
             ActivityCompat.requestPermissions(this,
                     new String[]{
                             Manifest.permission.CAMERA,
@@ -256,7 +237,6 @@ public class StoryActivity extends AppCompatActivity {
                     },
                     PERMISSION_REQUEST_CODE);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // API 29-32
-            // For Android 10-12
             ActivityCompat.requestPermissions(this,
                     new String[]{
                             Manifest.permission.CAMERA,
@@ -266,7 +246,6 @@ public class StoryActivity extends AppCompatActivity {
                     },
                     PERMISSION_REQUEST_CODE);
         } else { // API < 29
-            // For Android 9 and below
             ActivityCompat.requestPermissions(this,
                     new String[]{
                             Manifest.permission.CAMERA,
@@ -276,48 +255,6 @@ public class StoryActivity extends AppCompatActivity {
                     },
                     PERMISSION_REQUEST_CODE);
         }
-    }
-
-    /**
-     * Shows a dialog explaining why the app needs certain permissions.
-     */
-    private void showPermissionRationale() {
-        new AlertDialog.Builder(this)
-                .setTitle("Permissions Required")
-                .setMessage("This app requires access to your camera and microphone to capture photos and videos.")
-                .setPositiveButton("Grant", (dialog, which) -> requestNecessaryPermissions())
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    Toast.makeText(this, "Permissions denied. App cannot function without required permissions.", Toast.LENGTH_LONG).show();
-                    // Optionally, navigate the user back or disable certain features
-                })
-                .create()
-                .show();
-    }
-
-    /**
-     * Shows a dialog directing the user to app settings to manually enable permissions.
-     */
-    private void showSettingsDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Permissions Required")
-                .setMessage("This app requires camera and audio permissions to function. Please enable them in app settings.")
-                .setPositiveButton("Open Settings", (dialog, which) -> openAppSettings())
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    Toast.makeText(this, "Permissions denied. App cannot function without required permissions.", Toast.LENGTH_LONG).show();
-                    // Optionally, navigate the user back or disable certain features
-                })
-                .create()
-                .show();
-    }
-
-    /**
-     * Opens the application's settings page.
-     */
-    private void openAppSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
     }
 
     @Override
@@ -331,12 +268,8 @@ public class StoryActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Sets up the camera using CameraX.
-     */
     private void setupCamera() {
         Log.d("StoryActivity", "Setting up camera...");
-        // Set up CameraX preview
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
             try {
@@ -344,46 +277,32 @@ public class StoryActivity extends AppCompatActivity {
                 bindCameraUseCases(cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error setting up camera: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("StoryActivity", "Error setting up camera.", e);
             }
         }, ContextCompat.getMainExecutor(this));
     }
 
-    /**
-     * Binds the camera use cases (Preview, ImageCapture, VideoCapture).
-     *
-     * @param cameraProvider The camera provider.
-     */
     private void bindCameraUseCases(ProcessCameraProvider cameraProvider) {
-        // Preview use case
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(cameraPreviewView.getSurfaceProvider());
 
-        // ImageCapture use case (for taking photos)
         imageCapture = new ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build();
 
-        // VideoCapture use case (for recording videos)
         recorder = new Recorder.Builder()
                 .setQualitySelector(QualitySelector.from(Quality.HD))
                 .build();
         videoCapture = VideoCapture.withOutput(recorder);
 
-        // Camera selector (front or back)
         cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(isUsingFrontCamera ? CameraSelector.LENS_FACING_FRONT : CameraSelector.LENS_FACING_BACK)
                 .build();
 
         try {
-            // Unbind all use cases before rebinding
             cameraProvider.unbindAll();
-
-            // Bind use cases to camera
             camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture, videoCapture);
 
-            // Check if VideoCapture is initialized
             if (videoCapture != null && imageCapture != null && camera != null) {
                 if (capturePhotoButton != null) {
                     capturePhotoButton.setEnabled(true);
@@ -391,18 +310,16 @@ public class StoryActivity extends AppCompatActivity {
                 if (captureVideoButton != null) {
                     captureVideoButton.setEnabled(true);
                 }
-                Toast.makeText(this, "Camera and VideoCapture initialized successfully.", Toast.LENGTH_SHORT).show();
                 Log.d("StoryActivity", "Camera and VideoCapture initialized successfully.");
             } else {
-                Toast.makeText(this, "VideoCapture is null after binding.", Toast.LENGTH_SHORT).show();
                 Log.e("StoryActivity", "VideoCapture is null after binding.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to bind camera use cases: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("StoryActivity", "Failed to bind camera use cases.", e);
         }
     }
+
 
     /**
      * Switches the UI and functionality to Photo Mode.
@@ -412,7 +329,6 @@ public class StoryActivity extends AppCompatActivity {
             capturePhotoButton.setVisibility(View.VISIBLE);
             captureVideoButton.setVisibility(View.GONE);
             modeTextView.setText("Photo"); // Update modeTextView
-            Toast.makeText(this, "Switched to Photo Mode", Toast.LENGTH_SHORT).show();
             Log.d("StoryActivity", "Switched to Photo Mode.");
         }
     }
@@ -425,7 +341,6 @@ public class StoryActivity extends AppCompatActivity {
             capturePhotoButton.setVisibility(View.GONE);
             captureVideoButton.setVisibility(View.VISIBLE);
             modeTextView.setText("Video"); // Update modeTextView
-            Toast.makeText(this, "Switched to Video Mode", Toast.LENGTH_SHORT).show();
             Log.d("StoryActivity", "Switched to Video Mode.");
         }
     }
@@ -435,7 +350,6 @@ public class StoryActivity extends AppCompatActivity {
      */
     private void capturePhoto() {
         if (imageCapture == null) {
-            Toast.makeText(this, "Image capture not initialized", Toast.LENGTH_SHORT).show();
             Log.e("StoryActivity", "Attempted to capture photo, but ImageCapture is null.");
             return;
         }
@@ -444,7 +358,6 @@ public class StoryActivity extends AppCompatActivity {
         if (!hasPermissions()) {
             // Permissions not granted, request them
             requestNecessaryPermissions();
-            Toast.makeText(this, "Permissions are required to capture photo", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -462,19 +375,15 @@ public class StoryActivity extends AppCompatActivity {
                     uploadButton.setVisibility(View.VISIBLE);
                     capturePhotoButton.setVisibility(View.GONE);  // Hide capture photo button
                     captureVideoButton.setVisibility(View.GONE);   // Hide capture video button
-                    Toast.makeText(StoryActivity.this, "Photo captured successfully!", Toast.LENGTH_SHORT).show();
                     Log.d("StoryActivity", "Photo captured and saved: " + capturedPhotoFile.getAbsolutePath());
                 }
 
                 @Override
                 public void onError(@NonNull ImageCaptureException exception) {
-                    Toast.makeText(StoryActivity.this, "Error capturing photo: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("StoryActivity", "Error capturing photo.", exception);
                 }
             });
         } catch (SecurityException e) {
-            Toast.makeText(this, "Security exception capturing photo: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
             Log.e("StoryActivity", "Security exception capturing photo.", e);
         }
     }
@@ -496,11 +405,8 @@ public class StoryActivity extends AppCompatActivity {
                     flashButton.setImageResource(R.drawable.ic_flash_off);  // Change to "off" icon
                 }
 
-                Toast.makeText(this, isFlashOn ? "Flash turned ON" : "Flash turned OFF", Toast.LENGTH_SHORT).show();
                 Log.d("StoryActivity", "Flash toggled: " + (isFlashOn ? "ON" : "OFF"));
             } catch (SecurityException e) {
-                Toast.makeText(this, "Security exception toggling flash: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
                 Log.e("StoryActivity", "Security exception toggling flash.", e);
             }
         }
@@ -518,8 +424,6 @@ public class StoryActivity extends AppCompatActivity {
                 flashButton.setImageResource(R.drawable.ic_flash_off);  // Reset flash icon
                 Log.d("StoryActivity", "Flash turned off during camera switch.");
             } catch (SecurityException e) {
-                Toast.makeText(this, "Security exception toggling torch: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
                 Log.e("StoryActivity", "Security exception toggling torch.", e);
             }
         }
@@ -530,8 +434,6 @@ public class StoryActivity extends AppCompatActivity {
             bindCameraUseCases(cameraProvider);
             Log.d("StoryActivity", "Camera use cases rebound with " + (isUsingFrontCamera ? "front" : "back") + " camera.");
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error switching camera: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("StoryActivity", "Error switching camera.", e);
         }
     }
@@ -541,7 +443,6 @@ public class StoryActivity extends AppCompatActivity {
      */
     private void sendToFriend() {
         // Implement sending the captured photo or video to a friend
-        Toast.makeText(this, "Sending media to friend...", Toast.LENGTH_SHORT).show();
         Log.d("StoryActivity", "sendToFriend() called.");
         // Add your sending logic here
         // For this implementation, we'll treat 'send' as uploading to Firestore
@@ -553,7 +454,6 @@ public class StoryActivity extends AppCompatActivity {
      */
     private void uploadToStory() {
         // Implement uploading the captured photo or video to your story
-        Toast.makeText(this, "Uploading media to your story...", Toast.LENGTH_SHORT).show();
         Log.d("StoryActivity", "uploadToStory() called.");
         // Add your uploading logic here
         // For this implementation, we'll treat 'upload' as uploading to Firestore
@@ -568,7 +468,6 @@ public class StoryActivity extends AppCompatActivity {
     private void uploadMedia(String mode) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -576,11 +475,8 @@ public class StoryActivity extends AppCompatActivity {
             uploadPhotoToFirebase(capturedPhotoFile, mode, currentUser.getUid());
         } else if (capturedVideoUri != null) { // Check if a video is captured
             uploadVideoToFirebase(capturedVideoUri, mode, currentUser.getUid());
-        } else {
-            Toast.makeText(this, "No media to upload", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     /**
      * Uploads a photo to Firebase Storage and stores its metadata in Firestore.
@@ -591,44 +487,13 @@ public class StoryActivity extends AppCompatActivity {
      */
     private void uploadPhotoToFirebase(File photoFile, String mode, String userId) {
         // Initial validation
-        if (photoFile == null) {
-            Log.e("StoryActivity", "Upload failed: Photo file is null");
-            Toast.makeText(this, "Error: No photo file found", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Log.d("StoryActivity", "Checking file before upload...");
-        Log.d("StoryActivity", "- Path: " + photoFile.getAbsolutePath());
-        Log.d("StoryActivity", "- Exists: " + photoFile.exists());
-        Log.d("StoryActivity", "- Can read: " + photoFile.canRead());
-        Log.d("StoryActivity", "- Size (bytes): " + photoFile.length());
-
-        if (!photoFile.exists()) {
-            Log.e("StoryActivity", "Upload failed: Photo file does not exist at path: " + photoFile.getAbsolutePath());
-            Toast.makeText(this, "Error: Photo file doesn't exist", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!photoFile.canRead()) {
-            Log.e("StoryActivity", "Upload failed: Cannot read photo file at path: " + photoFile.getAbsolutePath());
-            Toast.makeText(this, "Error: Cannot read photo file", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (photoFile.length() == 0) {
-            Log.e("StoryActivity", "Upload failed: Photo file is empty");
-            Toast.makeText(this, "Error: Photo file is empty", Toast.LENGTH_SHORT).show();
+        if (photoFile == null || !photoFile.exists() || !photoFile.canRead() || photoFile.length() == 0) {
             return;
         }
 
         // Size validation
-        long fileSizeInBytes = photoFile.length();
-        long fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-        Log.d("StoryActivity", "File size: " + fileSizeInMB + "MB (" + fileSizeInBytes + " bytes)");
-
+        long fileSizeInMB = photoFile.length() / (1024 * 1024);
         if (fileSizeInMB > 5) {
-            Log.e("StoryActivity", "Upload failed: File size exceeds 5MB limit");
-            Toast.makeText(this, "Error: Photo exceeds 5MB size limit", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -637,13 +502,8 @@ public class StoryActivity extends AppCompatActivity {
         String fileName = "photo_" + timestamp + ".jpg";
         String storagePath = String.format("photos/%s/%s", userId, fileName);
 
-        Log.d("StoryActivity", "Storage details:");
-        Log.d("StoryActivity", "- File name: " + fileName);
-        Log.d("StoryActivity", "- Storage path: " + storagePath);
-
         // Create storage reference
         StorageReference photoRef = FirebaseStorage.getInstance().getReference().child(storagePath);
-        Log.d("StoryActivity", "- Full storage reference: " + photoRef.toString());
 
         // Create metadata
         StorageMetadata metadata = new StorageMetadata.Builder()
@@ -652,41 +512,25 @@ public class StoryActivity extends AppCompatActivity {
                 .setCustomMetadata("uploadMode", mode)
                 .setCustomMetadata("timestamp", timestamp)
                 .build();
-        Log.d("StoryActivity", "Metadata created: " + metadata.toString());
 
         // Create upload task
         Uri fileUri = Uri.fromFile(photoFile);
-        Log.d("StoryActivity", "File URI created: " + fileUri.toString());
-
         UploadTask uploadTask = photoRef.putFile(fileUri, metadata);
-        Log.d("StoryActivity", "Upload task created and starting...");
 
         // Monitor upload progress
-        uploadTask.addOnProgressListener(taskSnapshot -> {
-            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            Log.d("StoryActivity", String.format("Upload progress: %.1f%%", progress));
-        }).addOnSuccessListener(taskSnapshot -> {
-            Log.d("StoryActivity", "Upload successful. Getting download URL...");
-
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
             photoRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 String downloadUrl = uri.toString();
-                Log.d("StoryActivity", "Download URL obtained: " + downloadUrl);
-
-                // Create media object
-                long currentTimeMillis = System.currentTimeMillis();
-                long expiresAt = currentTimeMillis + (24 * 60 * 60 * 1000);
 
                 Media media = new Media(
                         userId,
                         downloadUrl,
                         "photo",
-                        currentTimeMillis,
+                        System.currentTimeMillis(),
                         fileName,
-                        expiresAt
+                        System.currentTimeMillis() + (24 * 60 * 60 * 1000)
                 );
 
-                // Save to Firestore
-                Log.d("StoryActivity", "Saving to Firestore path: users/" + userId + "/stories");
                 firestore.collection("users")
                         .document(userId)
                         .collection("stories")
@@ -694,37 +538,14 @@ public class StoryActivity extends AppCompatActivity {
                         .addOnSuccessListener(documentReference -> {
                             String docId = documentReference.getId();
                             media.setMediaId(docId);
-                            documentReference.update("mediaId", docId) // Update dokumen Firestore
-                                    .addOnSuccessListener(aVoid -> {
-                                        Log.d("StoryActivity", "mediaId berhasil diperbarui.");
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("StoryActivity", "Gagal memperbarui mediaId di Firestore.", e);
-                                    });
-                            // Clean up and reset
-                            if (photoFile.exists() && photoFile.delete()) {
-                                Log.d("StoryActivity", "Local photo file deleted");
+                            documentReference.update("mediaId", docId);
+                            if (photoFile.exists()) {
+                                photoFile.delete();
                             }
-
                             resetUIAfterUpload();
                             capturedPhotoFile = null;
-
-                            Toast.makeText(StoryActivity.this, "Photo uploaded successfully!", Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.e("StoryActivity", "Firestore save failed", e);
-                            Toast.makeText(StoryActivity.this, "Failed to save photo metadata: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
-            }).addOnFailureListener(e -> {
-                Log.e("StoryActivity", "Failed to get download URL", e);
-                Toast.makeText(this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
-        }).addOnFailureListener(e -> {
-            Log.e("StoryActivity", "Upload failed for path: " + storagePath, e);
-            Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }).addOnCanceledListener(() -> {
-            Log.d("StoryActivity", "Upload canceled for path: " + storagePath);
-            Toast.makeText(this, "Upload canceled", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -737,7 +558,6 @@ public class StoryActivity extends AppCompatActivity {
      */
     private void uploadVideoToFirebase(Uri videoUri, String mode, String userId) {
         if (videoUri == null) {
-            Toast.makeText(this, "No video to upload", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -776,7 +596,6 @@ public class StoryActivity extends AppCompatActivity {
                             // Set the mediaId to the generated document ID
                             media.setMediaId(documentReference.getId());
 
-                            Toast.makeText(this, "Video story uploaded successfully!", Toast.LENGTH_SHORT).show();
                             Log.d("StoryActivity", "Video story metadata added to Firestore with ID: " + documentReference.getId());
                             resetUIAfterUpload();
 
@@ -784,15 +603,12 @@ public class StoryActivity extends AppCompatActivity {
                             capturedVideoUri = null;
                         })
                         .addOnFailureListener(e -> {
-                            Toast.makeText(this, "Failed to add metadata: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             Log.e("StoryActivity", "Error adding metadata to Firestore.", e);
                         });
             }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to retrieve download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("StoryActivity", "Error getting download URL.", e);
             });
         }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to upload video: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("StoryActivity", "Error uploading video to Firebase Storage.", e);
         });
     }
@@ -814,7 +630,6 @@ public class StoryActivity extends AppCompatActivity {
      */
     private void toggleVideoRecording() {
         if (videoCapture == null) {
-            Toast.makeText(this, "Video capture not initialized", Toast.LENGTH_SHORT).show();
             Log.e("StoryActivity", "Attempted to record video, but VideoCapture is null.");
             return;
         }
@@ -825,7 +640,6 @@ public class StoryActivity extends AppCompatActivity {
                     recording.stop();
                     Log.d("StoryActivity", "Recording stopped.");
                 } catch (SecurityException e) {
-                    Toast.makeText(this, "Security exception stopping recording: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("StoryActivity", "Security exception stopping recording.", e);
                 }
                 recording = null;
@@ -833,12 +647,10 @@ public class StoryActivity extends AppCompatActivity {
             isRecordingVideo = false;
             captureVideoButton.setImageResource(R.drawable.video_capture_button);
             modeSwitchButton.setEnabled(true);
-            Toast.makeText(this, "Video recording stopped", Toast.LENGTH_SHORT).show();
             Log.d("StoryActivity", "Video recording stopped.");
         } else {
             if (!hasPermissions()) {
                 requestNecessaryPermissions();
-                Toast.makeText(this, "Permissions are required to record video", Toast.LENGTH_SHORT).show();
                 Log.w("StoryActivity", "Permissions not granted. Recording cannot start.");
                 return;
             }
@@ -866,10 +678,8 @@ public class StoryActivity extends AppCompatActivity {
                             }
                         });
 
-                Toast.makeText(this, "Preparing to record video...", Toast.LENGTH_SHORT).show();
                 Log.d("StoryActivity", "Preparing to record video...");
             } catch (SecurityException e) {
-                Toast.makeText(this, "Security exception starting recording: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("StoryActivity", "Security exception starting recording.", e);
             }
         }
@@ -880,7 +690,6 @@ public class StoryActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             captureVideoButton.setImageResource(R.drawable.ic_video_capture);
             modeSwitchButton.setEnabled(false);
-            Toast.makeText(this, "Video recording started", Toast.LENGTH_SHORT).show();
         });
         Log.d("StoryActivity", "Video recording started.");
     }
@@ -890,7 +699,6 @@ public class StoryActivity extends AppCompatActivity {
             Uri videoUri = finalizeEvent.getOutputResults().getOutputUri();
             capturedVideoUri = videoUri; // Store the video URI
             runOnUiThread(() -> {
-                Toast.makeText(this, "Video saved successfully", Toast.LENGTH_SHORT).show();
                 previewImageView.setImageURI(videoUri);
                 previewImageView.setVisibility(View.VISIBLE);
                 sendButton.setVisibility(View.VISIBLE);
@@ -900,9 +708,6 @@ public class StoryActivity extends AppCompatActivity {
             });
             Log.d("StoryActivity", "Video saved at: " + videoUri);
         } else {
-            runOnUiThread(() -> {
-                Toast.makeText(this, "Error recording video: " + finalizeEvent.getError(), Toast.LENGTH_SHORT).show();
-            });
             Log.e("StoryActivity", "Error recording video: " + finalizeEvent.getError());
         }
 

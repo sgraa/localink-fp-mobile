@@ -42,6 +42,7 @@
             android:layout_gravity="center"
             android:src="@drawable/bijou_image"
             android:elevation="8dp"
+            android:scaleType="centerCrop"
             app:strokeWidth="0dp"
             app:strokeColor="@android:color/transparent"
             app:cardElevation="8dp"

@@ -2,7 +2,6 @@ package com.example.localink;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class UserStoryActivity extends AppCompatActivity {
 
@@ -45,8 +43,7 @@ public class UserStoryActivity extends AppCompatActivity {
             String userId = auth.getCurrentUser().getUid();
             loadFriendsStories(userId);
         } else {
-            Toast.makeText(this, "No user authenticated.", Toast.LENGTH_SHORT).show();
-            finish();
+            finish(); // If no user is authenticated, just finish the activity
         }
     }
 
@@ -63,14 +60,12 @@ public class UserStoryActivity extends AppCompatActivity {
                             loadUserStories(friendId);
                         }
                     } else {
-                        Toast.makeText(this, "You have no friends.", Toast.LENGTH_SHORT).show();
-                        finish();
+                        finish(); // If no friends are found, just finish the activity
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error fetching friends.", Toast.LENGTH_SHORT).show();
                     Log.e("UserStoryActivity", "Error fetching friends.", e);
-                    finish();
+                    finish(); // If error occurs, just finish the activity
                 });
     }
 
@@ -82,13 +77,12 @@ public class UserStoryActivity extends AppCompatActivity {
                 .orderBy("createdAt", Query.Direction.ASCENDING)
                 .addSnapshotListener((querySnapshot, e) -> {
                     if (e != null) {
-                        Toast.makeText(this, "Error fetching user's stories.", Toast.LENGTH_SHORT).show();
                         Log.e("UserStoryActivity", "Error fetching user's stories.", e);
                         return;
                     }
 
                     if (querySnapshot == null || querySnapshot.isEmpty()) {
-                        return;
+                        return; // No stories to display, do nothing
                     }
 
                     long currentTime = System.currentTimeMillis();

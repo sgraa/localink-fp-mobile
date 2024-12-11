@@ -6,7 +6,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
-import android.util.Log;
 import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,12 +46,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize Firebase instances
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference();
 
-        // Initialize UI components
         profileImageView = findViewById(R.id.profileImageView);
         usernameTextView = findViewById(R.id.usernameTextView);
         friendCountTextView = findViewById(R.id.friendCountTextView);
@@ -61,61 +58,48 @@ public class MainActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logoutButton);
         locationTextView = findViewById(R.id.locationTextView);
 
-        // Initialize Navbar components
         navHome = findViewById(R.id.nav_home);
         navFriends = findViewById(R.id.nav_friends);
         navStory = findViewById(R.id.nav_story);
 
-        // Set up Navbar navigation
         Navbar navbar = new Navbar(this);
         navbar.setupNavigation(navHome, navFriends, navStory);
 
-        // Get current user's ID
         String userId = mAuth.getCurrentUser().getUid();
         DocumentReference userRef = db.collection("users").document(userId);
 
-        // Fetch user data from Firestore
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 String username = documentSnapshot.getString("username");
-                String photoUrl = documentSnapshot.getString("photoUrl");  // Changed to match database field
+                String photoUrl = documentSnapshot.getString("photoUrl");
 
-                // Set username
                 usernameTextView.setText(username);
 
-                // Load profile image if available, otherwise use default
                 if (photoUrl != null && !photoUrl.isEmpty()) {
                     Glide.with(this).load(photoUrl).into(profileImageView);
                 } else {
                     Glide.with(this).load(R.drawable.bijou_image).into(profileImageView);
                 }
             } else {
-                // If the document does not exist, set default image
                 Glide.with(this).load(R.drawable.bijou_image).into(profileImageView);
             }
         });
 
-        // Initialize the location client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Check if the location permission is granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fetchLocation();
         } else {
-            // Request permission if not granted
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
 
-        // Fetch the number of friends for the current user
-        userRef.collection("friends").get()
-                .addOnSuccessListener(querySnapshot -> {
-                    int friendCount = querySnapshot.size();
-                    friendCountTextView.setText("Friends: " + friendCount);
-                });
+        userRef.collection("friends").get().addOnSuccessListener(querySnapshot -> {
+            int friendCount = querySnapshot.size();
+            friendCountTextView.setText("Friends: " + friendCount);
+        });
 
-        // On click to change profile picture
         profileImageView.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -123,20 +107,17 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
         });
 
-        // Initialize userstoriesButton
         Button userstoriesButton = findViewById(R.id.userstoriesButton);
         userstoriesButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, UserStoryActivity.class);
             startActivity(intent);
         });
 
-        // Navigate to stories screen
         storiesButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, StoryActivity.class);
             startActivity(intent);
         });
 
-        // Navigate to friends screen
         friendsButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
             startActivity(intent);
@@ -148,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Handle logout action
         logoutButton.setOnClickListener(v -> {
             mAuth.signOut();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -188,10 +168,6 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             locationTextView.setText("Location: Unknown");
                         }
-                    })
-                    .addOnFailureListener(this, e -> {
-                        locationTextView.setText("Location: Error retrieving location");
-                        Log.e("LocationError", "Failed to get location", e);
                     });
         }
     }
@@ -221,31 +197,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void uploadProfilePicture(Uri imageUri) {
         String userId = mAuth.getCurrentUser().getUid();
-        if (userId == null) {
-            Log.e("Upload", "User ID is null");
-            return;
-        }
+        if (userId == null) return;
 
         StorageReference profileImageRef = storageRef.child("profile_pictures/" + userId + ".jpg");
 
         profileImageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String photoUrl = uri.toString();  // Changed variable name to match database field
-                        Log.d("Upload", "Image uploaded successfully. URL: " + photoUrl);
+                        String photoUrl = uri.toString();
 
-                        // Update to use photoUrl field name
-                        db.collection("users").document(userId).update("photoUrl", photoUrl)  // Changed to match database field
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("Firestore", "Profile image URL updated in Firestore");
-                                    Glide.with(this).load(photoUrl).into(profileImageView);
-                                })
-                                .addOnFailureListener(e -> Log.e("Firestore", "Failed to update Firestore", e));
+                        db.collection("users").document(userId).update("photoUrl", photoUrl)
+                                .addOnSuccessListener(aVoid -> Glide.with(this).load(photoUrl).into(profileImageView));
                     });
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("Upload", "Image upload failed", e);
-                    Glide.with(this).load(R.drawable.bijou_image).into(profileImageView);
-                });
+                .addOnFailureListener(e -> Glide.with(this).load(R.drawable.bijou_image).into(profileImageView));
     }
 }
