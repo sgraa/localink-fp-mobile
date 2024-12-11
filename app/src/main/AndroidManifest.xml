@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- For Android 12 (API level 32) and below -->

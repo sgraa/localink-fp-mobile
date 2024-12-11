@@ -1,13 +1,26 @@
 package com.example.localink;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.Build;
+import android.util.Log;
+import android.widget.TextView;
+import androidx.core.app.ActivityCompat;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView usernameTextView, friendCountTextView;
     private Button storiesButton, friendsButton;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private FusedLocationProviderClient fusedLocationClient;
+    private TextView locationTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         storiesButton = findViewById(R.id.storiesButton);
         friendsButton = findViewById(R.id.friendsButton);
         logoutButton = findViewById(R.id.logoutButton);
+        locationTextView = findViewById(R.id.locationTextView); // Ensure you have a TextView for location
 
         // Initialize Navbar components
         navHome = findViewById(R.id.nav_home);
@@ -78,6 +95,19 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(this).load(R.drawable.bijou_image).into(profileImageView);
             }
         });
+
+        // Initialize the location client
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // Check if the location permission is granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fetchLocation(); // Fetch location if permission is granted
+        } else {
+            // Request permission if not granted
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
 
         // Fetch the number of friends for the current user
         userRef.collection("friends").get()
@@ -132,6 +162,65 @@ public class MainActivity extends AppCompatActivity {
             uploadProfilePicture(imageUri);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission granted, fetch the location
+            fetchLocation();
+        } else {
+            // Permission denied
+            locationTextView.setText("Location: Permission denied");
+        }
+    }
+
+    private void fetchLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, location -> {
+                        if (location != null) {
+                            String cityCountry = getCityCountry(location);
+                            locationTextView.setText(cityCountry);
+                        } else {
+                            locationTextView.setText("Location: Unknown");
+                        }
+                    })
+                    .addOnFailureListener(this, e -> {
+                        locationTextView.setText("Location: Error retrieving location");
+                        Log.e("LocationError", "Failed to get location", e);
+                    });
+        }
+    }
+
+    private String getCityCountry(Location location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (addresses != null && !addresses.isEmpty()) {
+            Address address = addresses.get(0);
+
+            // Ambil komponen alamat
+            String addressLine = address.getAddressLine(0);  // Nama jalan
+
+            // Gabungkan informasi alamat
+            StringBuilder locationDetails = new StringBuilder();
+            if (addressLine != null) locationDetails.append(addressLine).append(", ");
+
+            return locationDetails.toString();
+        } else {
+            return "Unknown location";
+        }
+    }
+
+
 
     private void uploadProfilePicture(Uri imageUri) {
         String userId = mAuth.getCurrentUser().getUid(); // Ensure userId is valid

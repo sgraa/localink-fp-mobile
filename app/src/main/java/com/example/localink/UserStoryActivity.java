@@ -1,82 +1,59 @@
 package com.example.localink;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.DocumentSnapshot;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UserStoryActivity extends AppCompatActivity {
 
-    private ViewPager2 storyViewPager;
-    private FirebaseFirestore firestore;
-    private StoryAdapter storyAdapter;
+    private RecyclerView storyRecyclerView;
+    private UserStoryAdapter userStoryAdapter; // Updated Adapter Name
     private List<Media> mediaList;
-    private ImageButton closeStoryButton;
-    private ListenerRegistration storiesListener;
-
-    private Handler handler = new Handler();
-    private Runnable advanceStoryRunnable;
+    private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_story);
 
-        storyViewPager = findViewById(R.id.storyViewPager);
-        closeStoryButton = findViewById(R.id.closeStoryButton);
+        // Initialize views
+        storyRecyclerView = findViewById(R.id.storyRecyclerView);
         firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
         mediaList = new ArrayList<>();
 
-        // Initialize the adapter
-        storyAdapter = new StoryAdapter(mediaList, this);
-        storyViewPager.setAdapter(storyAdapter);
+        // Initialize RecyclerView
+        userStoryAdapter = new UserStoryAdapter(mediaList, this); // Updated Adapter Name
+        storyRecyclerView.setAdapter(userStoryAdapter);
+        storyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Get the current user's ID and check authentication
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        // Check authentication and load stories
         if (auth.getCurrentUser() != null) {
             String userId = auth.getCurrentUser().getUid();
-            // Fetch and display stories of the user's friends with real-time updates
             loadFriendsStories(userId);
         } else {
-            Toast.makeText(this, "No story to display.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No user authenticated.", Toast.LENGTH_SHORT).show();
             finish();
-            return; // Ensure that no further code is executed if user is not authenticated
         }
-
-        // Initialize the advance runnable
-        advanceStoryRunnable = () -> {
-            if (!mediaList.isEmpty()) {
-                int nextItem = (storyViewPager.getCurrentItem() + 1) % mediaList.size();
-                storyViewPager.setCurrentItem(nextItem, true);
-                handler.postDelayed(advanceStoryRunnable, 5000); // Advance every 5 seconds
-            }
-        };
-
-        closeStoryButton.setOnClickListener(v -> {
-            // Close the activity when close button is pressed
-            finish();
-        });
     }
 
     private void loadFriendsStories(String userId) {
-        // Get the list of friends for the current user
         firestore.collection("users")
                 .document(userId)
-                .collection("friends")  // Assuming a collection of friends
+                .collection("friends")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
@@ -98,12 +75,11 @@ public class UserStoryActivity extends AppCompatActivity {
     }
 
     private void loadUserStories(String userId) {
-        // Fetch active stories for the given user (friend)
         firestore.collection("users")
                 .document(userId)
                 .collection("stories")
                 .whereGreaterThan("expiresAt", System.currentTimeMillis())
-                .orderBy("createdAt", Query.Direction.ASCENDING) // Ensure ordering by createdAt
+                .orderBy("createdAt", Query.Direction.ASCENDING)
                 .addSnapshotListener((querySnapshot, e) -> {
                     if (e != null) {
                         Toast.makeText(this, "Error fetching user's stories.", Toast.LENGTH_SHORT).show();
@@ -112,32 +88,22 @@ public class UserStoryActivity extends AppCompatActivity {
                     }
 
                     if (querySnapshot == null || querySnapshot.isEmpty()) {
-                        return; // No stories for this friend, continue with the next friend
+                        return;
                     }
 
                     long currentTime = System.currentTimeMillis();
 
-                    // Add the stories to the mediaList
                     for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                         Media media = documentSnapshot.toObject(Media.class);
-                        if (media != null) {
-                            media.setMediaId(documentSnapshot.getId());
-                            // Check if the story has not expired
-                            if (media.getExpiresAt() > currentTime) {
-                                mediaList.add(media);
-                            } else {
-                                // Optionally, delete expired stories
-                                deleteExpiredStory(userId, documentSnapshot.getId());
-                            }
+                        if (media != null && media.getExpiresAt() > currentTime) {
+                            mediaList.add(media);
+                        } else {
+                            deleteExpiredStory(userId, documentSnapshot.getId());
                         }
                     }
 
-                    // Notify adapter to display stories
-                    storyAdapter.notifyDataSetChanged();
-
-                    // Start auto-advance
-                    handler.removeCallbacks(advanceStoryRunnable);
-                    handler.postDelayed(advanceStoryRunnable, 5000); // Start after 5 seconds
+                    // Notify the adapter to update the UI
+                    userStoryAdapter.notifyDataSetChanged(); // Updated Adapter Name
                 });
     }
 
@@ -146,27 +112,5 @@ public class UserStoryActivity extends AppCompatActivity {
                 .delete()
                 .addOnSuccessListener(aVoid -> Log.d("UserStoryActivity", "Expired story deleted: " + storyId))
                 .addOnFailureListener(e -> Log.e("UserStoryActivity", "Error deleting expired story: " + storyId, e));
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Start the auto-advance when the activity is visible
-        handler.postDelayed(advanceStoryRunnable, 5000); // Advance every 5 seconds
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // Remove callbacks when the activity is no longer visible
-        handler.removeCallbacks(advanceStoryRunnable);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (storiesListener != null) {
-            storiesListener.remove();
-        }
     }
 }

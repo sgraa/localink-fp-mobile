@@ -38,22 +38,23 @@ android {
 }
 
 dependencies {
+    // Firebase dependencies
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
-    implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
-    implementation("com.google.firebase:firebase-firestore:25.1.1")
     implementation("com.google.firebase:firebase-functions:21.1.0")
+
+    // Google Play Services Location for location services
+    implementation("com.google.android.gms:play-services-location:18.0.0")
+
+    // Other dependencies
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.github.bumptech.glide:glide:4.11.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
-    implementation ("com.github.bumptech.glide:glide:4.15.1") // Add this line
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1") // Add this for Glide annotation processing
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
     // CameraX dependencies
     implementation("androidx.camera:camera-core:1.4.0")
@@ -69,3 +70,4 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1") // Updated to a newer version
     testImplementation("junit:junit:4.13.2")
 }
+
