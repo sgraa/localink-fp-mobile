@@ -91,13 +91,23 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             }
             binding.friendUsername.setText(username);
 
-            // Load the profile picture using Glide with placeholder and error images
-            Glide.with(binding.friendProfilePic.getContext())
-                    .load(user.getPhotoUrl())  // URL or resource ID
-                    .placeholder(R.drawable.ic_profile_placeholder) // Default placeholder
-                    .error(R.drawable.ic_profile_placeholder)       // Placeholder on error
-                    .circleCrop()  // Apply circular crop transformation
-                    .into(binding.friendProfilePic);
+            // Debug log for photoUrl
+            String photoUrl = user.getPhotoUrl();
+            Log.d("FriendsAdapter", "Profile picture URL for user " + user.getUid() + ": " + photoUrl);
+
+            // Check if photoUrl is null or empty
+            if (photoUrl != null && !photoUrl.isEmpty()) {
+                // Load the profile picture using Glide
+                Glide.with(binding.friendProfilePic.getContext())
+                        .load(photoUrl)  // URL or resource ID
+                        .placeholder(R.drawable.ic_profile_placeholder) // Default placeholder
+                        .error(R.drawable.ic_profile_placeholder)       // Placeholder on error
+                        .circleCrop()  // Apply circular crop transformation
+                        .into(binding.friendProfilePic);
+            } else {
+                // Set placeholder image if photoUrl is null or empty
+                binding.friendProfilePic.setImageResource(R.drawable.ic_profile_placeholder);
+            }
 
             // Set click listener on the friend item
             binding.getRoot().setOnClickListener(v -> listener.onFriendClick(user));
@@ -105,6 +115,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             // Set click listener on the Add Friend button
             binding.addFriendButton.setOnClickListener(v -> listener.onAddFriendClick(user, binding.addFriendButton));
         }
+
     }
 
     /**

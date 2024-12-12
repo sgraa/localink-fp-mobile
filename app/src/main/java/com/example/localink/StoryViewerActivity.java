@@ -54,7 +54,7 @@ public class StoryViewerActivity extends AppCompatActivity {
             // Fetch and display friend's active stories with real-time updates
             loadFriendStories(friendUserId);
         } else {
-            Toast.makeText(this, "No story to display.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "friend's stories.", Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -81,14 +81,8 @@ public class StoryViewerActivity extends AppCompatActivity {
                 .whereGreaterThan("expiresAt", System.currentTimeMillis())
                 .orderBy("createdAt", Query.Direction.ASCENDING) // Updated field
                 .addSnapshotListener((querySnapshot, e) -> {
-                    if (e != null) {
-                        Toast.makeText(this, "Error fetching friend's stories.", Toast.LENGTH_SHORT).show();
-                        Log.e("StoryViewerActivity", "Error fetching friend's stories.", e);
-                        return;
-                    }
-
                     if (querySnapshot == null) {
-                        Toast.makeText(this, "No active stories to display.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "friend's stories.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
